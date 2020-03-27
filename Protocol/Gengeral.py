@@ -82,13 +82,11 @@ class Gengeral_Function:
                 return List_dev,int(Max_number_Node,16)
         
     def SSH_Connect_Read_mesh_dev_store(self,Addr_ip):
-
         temp = paramiko.SSHClient()
         temp.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         temp.connect(hostname= Addr_ip, username="root", password="I@T6tw9!+?") 
         ssh_stdin, ssh_stdout, ssh_stderr= temp.exec_command('cat /etc/config/mesh_dev_store') 
         strcmd = ''.join(ssh_stdout.readlines())
-        #print(''.join(ssh_stdout.readlines())) 
         temp.close()
         if(len(strcmd)>0):
             return strcmd
@@ -101,7 +99,7 @@ class Gengeral_Function:
         listtemp = strlog.splitlines()    
         Find_Max_Node = "1001"
         for i in range(len(listtemp)):
-            listData = re.findall("\w+",listtemp[i]) 
+            listData = re.findall(r"\w+",listtemp[i]) 
             if(len(listData[5]) == 4):
                 strResult = self.Type_Number_to_Dev_name(listData[5]) # return Type name if not tyep return false
                 if(strResult == False):

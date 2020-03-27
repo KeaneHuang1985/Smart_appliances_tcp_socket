@@ -24,15 +24,10 @@ class SP_Json_Cmd:
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
         return json.dumps(dict_Payload)
 
-    def Signal_Emit_Over_Current(self,targetDeviceId,int_msgid):
+    def Signal_Emit_Over_Current(self,targetDeviceId,int_msgid,bolresult):
         list_function = []
-
-        dict_header = {
-            'msgId'             :   int_msgid,
-            'sourceDeviceId'    :   targetDeviceId,
-            'msgType'           :   "signalEmit"
-        }
-        dict_function = { 'func' : "SGN OVER CURRENT PROTECTION", 'val': "True"}
+        dict_header = {'msgId':int_msgid,'sourceDeviceId':targetDeviceId,'msgType':"signalEmit"}
+        dict_function = { 'func' : "SGN OVER CURRENT PROTECTION", 'val': bolresult}
         list_function.append(dict_function)
         dict_functions ={'functions' : list_function}
         dict_data = {'data' :  dict_functions }

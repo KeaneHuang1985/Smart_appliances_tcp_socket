@@ -72,9 +72,9 @@ class LB_Json_Cmd:
             'targetDeviceId'           :   confige[2]
         }
         list_function = []
-        dict_ATR_COLOR_RED = { 'func' : "ATR_COLOR_RED", 'val': confige[5]}
-        dict_ATR_COLOR_GREEN = { 'func' : "ATR_COLOR_GREEN", 'val': confige[6]}
-        dict_ATR_COLOR_BLUE = { 'func' : "ATR_COLOR_BLUE", 'val': confige[7]}
+        dict_ATR_COLOR_RED = { 'func' : "ATR_COLOR_RED", 'val': confige[6]}
+        dict_ATR_COLOR_GREEN = { 'func' : "ATR_COLOR_GREEN", 'val': confige[7]}
+        dict_ATR_COLOR_BLUE = { 'func' : "ATR_COLOR_BLUE", 'val': confige[8]}
         list_function.append(dict_ATR_COLOR_RED)
         list_function.append(dict_ATR_COLOR_GREEN)
         list_function.append(dict_ATR_COLOR_BLUE)

@@ -57,6 +57,8 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         #====== SP / boiler =======
         self.btn_sp_on.clicked.connect(self.Fn_General_ON)              # General ON
         self.btn_sp_off.clicked.connect(self.Fn_General_OFF)            # General OFF
+        self.btn_SP_OPC.clicked.connect(self.Fn_OPC_status_Contorl)     # OPC
+        
         #====== LB =======
         self.lb_hz_red_color.valueChanged.connect(self.ChangeColorRed)       # Horizontal slider red
         self.lb_hz_green_color.valueChanged.connect(self.ChangeColorGreen)   # Horizontal slider green
@@ -73,7 +75,6 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         if(bolresult == True):
             self.GB_LB.setEnabled(True)
             self.GB_SP.setEnabled(True)
-            self.GB_Boiler.setEnabled(True)
             self.GB_Commom.setEnabled(True)
             self.btn_send_json.setEnabled(True)
             self.btn_connect.setEnabled(False)
@@ -81,8 +82,6 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             self.label_tcp_socket_state.setText("Connect")
         else:
             self.GB_SP.setEnabled(False)
-            self.GB_LB.setEnabled(False)
-            self.GB_Boiler.setEnabled(False)
             self.GB_Commom.setEnabled(False)
             self.btn_send_json.setEnabled(False) 
             self.btn_connect.setEnabled(False)
@@ -100,7 +99,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         else:
             print("Tcp socket Connect Fail")
        
-    def TCP_Clinet_Connect(slef,addr_ip):
+    def TCP_Clinet_Connect(self,addr_ip):
         addr = (addr_ip,9090)
         try:
             clientsock.connect(addr)
@@ -180,9 +179,10 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         if(len(self.lineEdit_Generated.text()) == 22 ):
             strid = self.lineEdit_Generated.text()
         else:
-            temp_id = re.findall("(?<=GenID\:)\w{22}",self.cb_Generated_id.currentText())     
+            temp_id = re.findall(r"(?<=GenID\:)\w{22}",self.cb_Generated_id.currentText())     
             strid = temp_id[0]
         return strid   
+
     def Fn_General_ON(self):
         self.Fn_General_Ctrl(True,self.Get_Generated_ID())
     def Fn_General_OFF(self):
@@ -193,6 +193,15 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             self.TCP_Clinet_Send(self.My_SP.sendControlCommand(strid,self.tempmsgid,Switch))  # SP cmd to TCP Send   
         else:
             print("Generated_ID Len Error ")
+    # SP OPC Control 
+    def Fn_OPC_status_Contorl(self):
+        self.update_msgid_count()
+        if(self.rb_sp_enable.isChecked == True):
+            self.TCP_Clinet_Send(self.My_SP.Signal_Emit_Over_Current(self.Get_Generated_ID(),self.tempmsgid,True))
+        else:
+            self.TCP_Clinet_Send(self.My_SP.Signal_Emit_Over_Current(self.Get_Generated_ID(),self.tempmsgid,False))
+            
+        
 
     # Light Blub Horizontal slider control RGB and Brightness value*                                                   
     def ChangeColorRed(self):                       
@@ -217,7 +226,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         LB_contor_confige = [
                             bolswitch,
                             itype,
-                            self.lineEdit_Generated.text(),
+                            self.Get_Generated_ID(),
                             self.tempmsgid,
                             self.lb_pb_brightness.value(),
                             bolBrightness,
@@ -228,29 +237,30 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         return LB_contor_confige
 
     def Fn_LB_General_OFF(self):
-        self.Fn_LB_Light_Ctrl(self.LB_Confige(False,0,False))
+        self.Fn_LB_Light_Ctrl(self.LB_Confige(False,0,False),1)
     def Fn_LB_General_ON(self):
-        self.Fn_LB_Light_Ctrl(self.LB_Confige(True,0,False))
+        self.Fn_LB_Light_Ctrl(self.LB_Confige(True,0,False),1)
     def Fn_LB_RGB_Brightness(self):
-        self.Fn_LB_Light_Ctrl(self.LB_Confige(False,1,True))
+        self.Fn_LB_Light_Ctrl(self.LB_Confige(False,1,True),2)
     def Fn_LB_RGB_Setting(self):
-        self.Fn_LB_Light_Ctrl(self.LB_Confige(False,1,False))
+        self.Fn_LB_Light_Ctrl(self.LB_Confige(False,1,False),3)
     def Fn_White_Brightnes(self):
-        self.Fn_LB_Light_Ctrl(self.LB_Confige(False,1,True))
+        self.Fn_LB_Light_Ctrl(self.LB_Confige(False,0,True),4)
 
-    def Fn_LB_Light_Ctrl(self,confige):
+    def Fn_LB_Light_Ctrl(self,confige,ievent):
         if(len(confige)==0):
             return      
         else:
-            if(confige[1] == 0):
-                strcmd = self.My_LB.sendControl_light_Switch_Command(confige)                                            # ON/OFF
-            if(confige[1] == 1 and confige[5] == False):                    # Setting RGB color 
+            if(ievent == 1):    # ievent 1 : ON/OFF                      
+                strcmd = self.My_LB.sendControl_light_Switch_Command(confige)        
+            if(ievent == 2):    # ievent 2 : Setting RGB Brightness              
+                strcmd = self.My_LB.sendControl_RGB_Brightness_Command(confige)                                       
+            if(ievent == 3):    # ievent 3 : Setting RGB color                 
                 strcmd = self.My_LB.sendControl_RGB_Setting_Command(confige) 
-            if(confige[1]== 1 and confige[5] == True):                      # Setting RGB Brightness
-                strcmd = self.My_LB.sendControl_RGB_Brightness_Command(confige)
-            if(confige[0] == 0 and confige[5] == True):                     # Setting White Brightness
+            if(ievent == 4):    # ievent 4 : Setting White Brightness
                 strcmd = self.My_LB.sendControl_Color_White_Command(confige)
             self.TCP_Clinet_Send(strcmd)
+            print(strcmd)
             
     def Update_Text_Send_Rec_Text(self,payload):
         self.textEdit_send.setText("")
@@ -267,7 +277,8 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             #recvdata = clientsock.recv(self.buffsize).decode('utf-8')  # 接收訊息，格式轉換
             #self.textEdit_rec.insertPlainText( time.strftime("%Y-%m-%d %H:%M:%S : ", time.localtime()) + recvdata + '\n\r')
         except socket.error as msg:
-            Timesheet = time.strftime("%Y-%m-%d %H:%M:%S ", time.localtime())
+            print('Socket Error : %s ' %str(msg))
+            #Timesheet = time.strftime("%Y-%m-%d %H:%M:%S ", time.localtime())
             #self.textEdit_rec.insertPlainText(Timesheet + " Error Result: " + str(msg) + '\n\r')
 
     def is_ip(self,ipAddr):
