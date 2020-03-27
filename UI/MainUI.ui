@@ -227,6 +227,120 @@
      </widget>
     </item>
     <item>
+     <widget class="QGroupBox" name="GB_SP">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="title">
+       <string>SP / Boiler</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QPushButton" name="btn_sp_on">
+         <property name="text">
+          <string>General_ON</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btn_sp_off">
+         <property name="text">
+          <string>General OFF</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_2">
+         <property name="title">
+          <string>SP OPC Control</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_4">
+          <item>
+           <widget class="QRadioButton" name="rb_sp_enable">
+            <property name="text">
+             <string>SP OPC Enable</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="rb_sp_disable">
+            <property name="text">
+             <string>SP OPC disable</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_SP_OPC">
+            <property name="text">
+             <string>SP OPC</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_3">
+         <property name="title">
+          <string>Report Interval</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item>
+           <widget class="QGroupBox" name="groupBox_4">
+            <property name="title">
+             <string>Guard</string>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_6">
+             <item>
+              <widget class="QCheckBox" name="cb_Action">
+               <property name="text">
+                <string>Action</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_7">
+            <property name="text">
+             <string>Tx interval</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="lineEdit_tx"/>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_8">
+            <property name="text">
+             <string>Wakeup interval</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="lineEdit_rx"/>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_set_interval">
+            <property name="text">
+             <string>Report interval</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
      <widget class="QGroupBox" name="GB_LB">
       <property name="enabled">
        <bool>false</bool>
@@ -381,64 +495,7 @@
      </widget>
     </item>
     <item>
-     <layout class="QGridLayout" name="gridLayout_3">
-      <item row="0" column="0">
-       <widget class="QGroupBox" name="GB_SP">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="title">
-         <string>SP / Boiler</string>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout_3">
-         <item>
-          <widget class="QPushButton" name="btn_sp_on">
-           <property name="text">
-            <string>General_ON</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="btn_sp_off">
-           <property name="text">
-            <string>General OFF</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QGroupBox" name="groupBox_2">
-           <property name="title">
-            <string>SP OPC Control</string>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_4">
-            <item>
-             <widget class="QRadioButton" name="rb_sp_enable">
-              <property name="text">
-               <string>SP OPC Enable</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QRadioButton" name="rb_sp_disable">
-              <property name="text">
-               <string>SP OPC disable</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="btn_SP_OPC">
-              <property name="text">
-               <string>SP OPC</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
-     </layout>
+     <layout class="QGridLayout" name="gridLayout_3"/>
     </item>
     <item>
      <layout class="QGridLayout" name="gridLayout_2">

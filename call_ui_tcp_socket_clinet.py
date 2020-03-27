@@ -8,6 +8,7 @@ import Protocol.Boiler_json as Boiler_json
 import Protocol.Light_Bubl_json as Light_Bubl_json
 import Protocol.Smart_Plug_json as Smart_Plug_json
 import Protocol.Gengeral as Gengeral
+import Protocol.Dc_Ac_interval_json as interval_set
 from threading import Timer
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow
@@ -32,6 +33,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.My_Gengral = Gengeral.Gengeral_Function()
         self.My_SP = Smart_Plug_json.SP_Json_Cmd()
         self.My_LB = Light_Bubl_json.LB_Json_Cmd()
+        self.MY_Interval = interval_set.Interval_set_Json_Cmd()
 
     # 設置 Timer 
     def CreateItems(self):  
@@ -54,11 +56,11 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.btn_start_rssi_scan.clicked.connect(self.Fn_startRssiScan) # Start Rssi Scan 
         self.btn_remove_dev.clicked.connect(self.Fn_Remove_devices)     # remove Dev
         self.btn_add_dev.clicked.connect(self.Fn_add_devices)           # add dev
+        self.btn_set_interval.clicked.connect(self.Fn_Interval_Set)
         #====== SP / boiler =======
         self.btn_sp_on.clicked.connect(self.Fn_General_ON)              # General ON
         self.btn_sp_off.clicked.connect(self.Fn_General_OFF)            # General OFF
         self.btn_SP_OPC.clicked.connect(self.Fn_OPC_status_Contorl)     # OPC
-        
         #====== LB =======
         self.lb_hz_red_color.valueChanged.connect(self.ChangeColorRed)       # Horizontal slider red
         self.lb_hz_green_color.valueChanged.connect(self.ChangeColorGreen)   # Horizontal slider green
@@ -149,6 +151,9 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     def Fn_add_devices(self):
         self.update_msgid_count()
         self.Fn_Common_function(7) # 7 -> add devices
+    def Fn_Interval_Set(self):
+        self.update_msgid_count()
+        self.Fn_Common_function(8) # 8 -> interval Setting
 
     def Fn_Common_function(self,ievent):
         if(ievent == 1):
@@ -164,7 +169,6 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         if(ievent == 6): 
             strcmd = self.My_Gengral.removeDevice(self.Get_Generated_ID(),self.tempmsgid)
         if(ievent == 7):
-            print("node id:" + str(self.int_Max_number_node))
             strcmd,self.int_Max_number_node = self.My_Gengral.addDevice(
                 self.Get_Generated_ID(),
                 self.tempmsgid,
@@ -172,16 +176,41 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                 self.lineEdit_onboard_mac.text(),
                 self.lineEdit_Report_interval.text()
                 )
-            print("update node id:" + str(self.int_Max_number_node))
+
+        if(ievent == 8):
+            bolaction = True
+            if(self.cb_Action.isChecked == False):
+                bolaction = False
+            strcmd = self.MY_Interval.Set_Interval_contorl(
+                self.Get_Type(),
+                self.Get_Generated_ID(),
+                self.tempmsgid,
+                self.lineEdit_tx.text(),
+                self.lineEdit_rx.text(),
+                bolaction
+                )
+
         self.TCP_Clinet_Send(strcmd)
 
     def Get_Generated_ID(self):
         if(len(self.lineEdit_Generated.text()) == 22 ):
             strid = self.lineEdit_Generated.text()
         else:
+            print(self.cb_Generated_id.currentText())
             temp_id = re.findall(r"(?<=GenID\:)\w{22}",self.cb_Generated_id.currentText())     
             strid = temp_id[0]
         return strid   
+
+    def Get_Type(self):
+        if(len(self.lineEdit_Generated.text()) == 22 ):
+            strType = self.lineEdit_Generated.text()
+        else:
+            print(self.cb_Generated_id.currentText())
+            Type = re.findall(r"(?<=Type\:)\w+",self.cb_Generated_id.currentText())     
+            strType = Type[0]
+        return strType   
+
+
 
     def Fn_General_ON(self):
         self.Fn_General_Ctrl(True,self.Get_Generated_ID())

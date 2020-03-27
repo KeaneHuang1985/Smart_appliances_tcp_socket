@@ -48,6 +48,18 @@ class Gengeral_Function:
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
         return json.dumps(dict_Payload),int_id
 
+    def Set_interval(self,targetDeviceId,int_msgid,listConfig):
+        listDate = []
+        dict_header = {'msgId':int_msgid,'msgType':"sendSystemControlCommand",'targetDeviceId':targetDeviceId}
+        listDate.append({ 'func' : "ATR_REPORT_PERIOD", 'val': tx}) 
+        listDate.append({ 'func' : "ATR WAKEUP PERIOD", 'val': rx}) 
+        dict_functions ={'functions' : listDate}
+        dict_data = {'data' : dict_functions } 
+        dict_Payload = {'header': dict_header , 'payload' : dict_data }
+        return json.dumps(dict_Payload)
+        
+
+
     def Type_Number_to_Dev_name(self,Typenumber):
         
         if(Typenumber == "9591"):
