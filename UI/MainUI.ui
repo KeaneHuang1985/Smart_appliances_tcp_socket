@@ -349,10 +349,10 @@
        <string>LB</string>
       </property>
       <layout class="QGridLayout" name="gridLayout_5">
-       <item row="18" column="0">
-        <widget class="QPushButton" name="btn_lb_white_brghtness">
+       <item row="19" column="0">
+        <widget class="QPushButton" name="btn_lb_light_on">
          <property name="text">
-          <string>White Brghtness</string>
+          <string>Light ON</string>
          </property>
         </widget>
        </item>
@@ -363,27 +363,20 @@
          </property>
         </widget>
        </item>
-       <item row="19" column="0">
-        <widget class="QPushButton" name="btn_lb_light_on">
+       <item row="18" column="0">
+        <widget class="QPushButton" name="btn_lb_white_brghtness">
          <property name="text">
-          <string>Light ON</string>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="0">
-        <widget class="QLabel" name="label_blue">
-         <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#5500ff;&quot;&gt;Blue&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
+          <string>White Brghtness</string>
          </property>
         </widget>
        </item>
        <item row="1" column="0">
         <widget class="QSlider" name="lb_hz_brightness">
+         <property name="minimum">
+          <number>1</number>
+         </property>
          <property name="maximum">
-          <number>255</number>
+          <number>100</number>
          </property>
          <property name="singleStep">
           <number>0</number>
@@ -396,13 +389,13 @@
          </property>
         </widget>
        </item>
-       <item row="6" column="0">
-        <widget class="QSlider" name="lb_hz_red_color">
-         <property name="maximum">
-          <number>255</number>
+       <item row="9" column="0">
+        <widget class="QLabel" name="label_blue">
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#5500ff;&quot;&gt;Blue&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
          </property>
         </widget>
        </item>
@@ -420,6 +413,16 @@
          </property>
         </widget>
        </item>
+       <item row="6" column="0">
+        <widget class="QSlider" name="lb_hz_red_color">
+         <property name="maximum">
+          <number>255</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
        <item row="8" column="0">
         <widget class="QSlider" name="lb_hz_green_color">
          <property name="maximum">
@@ -430,10 +433,19 @@
          </property>
         </widget>
        </item>
-       <item row="20" column="0">
-        <widget class="QPushButton" name="btn_lb_light_off">
-         <property name="text">
-          <string>Light OFF</string>
+       <item row="2" column="0" colspan="2">
+        <widget class="QProgressBar" name="lb_pb_brightness">
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+         <property name="minimum">
+          <number>0</number>
+         </property>
+         <property name="maximum">
+          <number>100</number>
+         </property>
+         <property name="value">
+          <number>50</number>
          </property>
         </widget>
        </item>
@@ -457,13 +469,10 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="0" colspan="2">
-        <widget class="QProgressBar" name="lb_pb_brightness">
-         <property name="maximum">
-          <number>255</number>
-         </property>
-         <property name="value">
-          <number>50</number>
+       <item row="20" column="0">
+        <widget class="QPushButton" name="btn_lb_light_off">
+         <property name="text">
+          <string>Light OFF</string>
          </property>
         </widget>
        </item>
@@ -471,6 +480,36 @@
         <widget class="QLabel" name="label_red">
          <property name="text">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#ff0000;&quot;&gt;Red&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QLabel" name="label_red_val">
+         <property name="text">
+          <string>0</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="1">
+        <widget class="QLabel" name="label_green_val">
+         <property name="text">
+          <string>0</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="1">
+        <widget class="QLabel" name="label_blue_val">
+         <property name="text">
+          <string>0</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
@@ -492,6 +531,9 @@
       <zorder>lb_hz_brightness</zorder>
       <zorder>lb_pb_brightness</zorder>
       <zorder>btn_lb_white_brghtness</zorder>
+      <zorder>label_red_val</zorder>
+      <zorder>label_green_val</zorder>
+      <zorder>label_blue_val</zorder>
      </widget>
     </item>
     <item>
@@ -499,13 +541,6 @@
     </item>
     <item>
      <layout class="QGridLayout" name="gridLayout_2">
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Send Json Format :&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-       </widget>
-      </item>
       <item row="2" column="1">
        <widget class="QLabel" name="label_4">
         <property name="text">
@@ -513,13 +548,27 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
-       <widget class="QTextEdit" name="textEdit_send"/>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Send Json Format :&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+       </widget>
       </item>
       <item row="3" column="1">
        <widget class="QTextEdit" name="textEdit_rec">
         <property name="enabled">
          <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QTextEdit" name="textEdit_send"/>
+      </item>
+      <item row="4" column="0" colspan="2">
+       <widget class="QPushButton" name="btn_clear">
+        <property name="text">
+         <string>Clear Msg</string>
         </property>
        </widget>
       </item>

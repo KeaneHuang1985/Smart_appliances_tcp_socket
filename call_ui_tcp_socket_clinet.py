@@ -20,6 +20,7 @@ clientsock.settimeout(5)
 Disable_encryption = "38313139373435313133313534313230D4DDB986B58E2B1A938551E6975B9C334148CD48B3F58919CBF4CD3592450242DEE896FE8B724758ACA2482819ECE42CB68B94E260F1428A645F592D8BDB294D95B0940D7EBB74AD39AA84EF670F8F4938313139373435313133313534313230"
 
 class MyMainWindow(QMainWindow, Ui_MainWindow):
+
     def __init__(self, parent=None):
         super(MyMainWindow, self).__init__(parent)
         self.buffsize = 1024  # 接收資料的快取大小
@@ -29,20 +30,18 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.msgid = 1
         self.tempmsgid = 0
         self.ip = ""
-        self.int_Max_number_node = 4097
+        self.int_Max_number_node = 4097 # Node number hex 1001
         self.My_Gengral = Gengeral.Gengeral_Function()
         self.My_SP = Smart_Plug_json.SP_Json_Cmd()
         self.My_LB = Light_Bubl_json.LB_Json_Cmd()
         self.MY_Interval = interval_set.Interval_set_Json_Cmd()
+        self.bolDisable_encryption = False
 
-    # 設置 Timer 
-    def CreateItems(self):  
-        # python therad timer 
-        t = Timer(5.0,self.Label_Time_Sheet)
+    def CreateItems(self): # 設置 Timer 
+        t = Timer(5.0,self.Label_Time_Sheet) # python therad timer 
         t.start()
 
-    # 設定線槽 
-    def CreateSignalSlot(self):
+    def CreateSignalSlot(self):  # 設定線槽
         #== TCP Socket === 
         self.btn_connect.clicked.connect(self.Fn_Socket_Connect)        #Connect TCP Socket
         self.btn_close.clicked.connect(self.Fn_socket_disconnect)       #Disconnet TCP Socket
@@ -56,7 +55,8 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.btn_start_rssi_scan.clicked.connect(self.Fn_startRssiScan) # Start Rssi Scan 
         self.btn_remove_dev.clicked.connect(self.Fn_Remove_devices)     # remove Dev
         self.btn_add_dev.clicked.connect(self.Fn_add_devices)           # add dev
-        self.btn_set_interval.clicked.connect(self.Fn_Interval_Set)
+        self.btn_set_interval.clicked.connect(self.Fn_Interval_Set)     # Set Interval 
+        self.btn_clear.clicked.connect(self.Fn_Text_Clear_Send_Rec)     # Clear Text
         #====== SP / boiler =======
         self.btn_sp_on.clicked.connect(self.Fn_General_ON)              # General ON
         self.btn_sp_off.clicked.connect(self.Fn_General_OFF)            # General OFF
@@ -72,34 +72,32 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.btn_lb_light_off.clicked.connect(self.Fn_LB_General_OFF)        # Light OFF
         self.btn_lb_light_on.clicked.connect(self.Fn_LB_General_ON)          # Light ON
 
-    # UI Contrl 
-    def TCP_Conn_Enable_GB(self,bolresult):
+    def TCP_Conn_Enable_GB(self,bolresult): # UI Contrl 
         if(bolresult == True):
             self.GB_LB.setEnabled(True)
             self.GB_SP.setEnabled(True)
             self.GB_Commom.setEnabled(True)
-            self.btn_send_json.setEnabled(True)
             self.btn_connect.setEnabled(False)
-            self.btn_read_mesh_dev.setEnabled(True)
             self.label_tcp_socket_state.setText("Connect")
         else:
             self.GB_SP.setEnabled(False)
             self.GB_Commom.setEnabled(False)
-            self.btn_send_json.setEnabled(False) 
-            self.btn_connect.setEnabled(False)
+            self.GB_LB.setEnabled(False)
+            self.btn_connect.setEnabled(True)
             self.btn_read_mesh_dev.setEnabled(False)
             self.label_tcp_socket_state.setText("Disconnect")
 
-    #========================================#
-    #   TCP Socket Function and ssh  connect #
-    #========================================#
-    def Fn_Socket_Connect(self):  
+    def Fn_Socket_Connect(self):    #TCP Socket Function and ssh  connect 
         if(self.is_ip(self.lineEdit.text())):
-            self.TCP_Clinet_Connect(self.ip)
-            self.TCP_Clinet_Send(Disable_encryption)
-            self.TCP_Conn_Enable_GB(True)
+            if(self.TCP_Clinet_Connect(self.ip) == True):
+                self.TCP_Clinet_Send(Disable_encryption)
+                self.bolDisable_encryption = True
+                self.Fn_mesh_dev_store()
+                self.TCP_Conn_Enable_GB(True)
+            else:
+                print("Tcp socket Connect Fail")
         else:
-            print("Tcp socket Connect Fail")
+            print("Tcp socket addr format Fail")
        
     def TCP_Clinet_Connect(self,addr_ip):
         addr = (addr_ip,9090)
@@ -118,6 +116,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
     def Fn_socket_disconnect(self):
         clientsock.close()
+        self.bolDisable_encryption = False
         self.TCP_Conn_Enable_GB(False)
     
     def Fn_mesh_dev_store(self):
@@ -130,30 +129,30 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             self.cb_Generated_id.addItems(ListDate)
 
     # common function             
-    def Fn_Find_dev(self):
+    def Fn_Find_dev(self):          # 1-> find dev
         self.update_msgid_count()
-        self.Fn_Common_function(1) # 1-> find dev
-    def Fn_OTA_Available(self):
+        self.Fn_Common_function(1) 
+    def Fn_OTA_Available(self):     # 2-> OTA Available
         self.update_msgid_count()
-        self.Fn_Common_function(2) # 2-> OTA Available
-    def Fn_Ready_OTA(self):
+        self.Fn_Common_function(2) 
+    def Fn_Ready_OTA(self):         # 3-> Ready OTA 
         self.update_msgid_count()
-        self.Fn_Common_function(3) # 3-> Ready OTA 
-    def Fn_ForceReadAll(self):
+        self.Fn_Common_function(3) 
+    def Fn_ForceReadAll(self):      # 4-> Force Read All 
         self.update_msgid_count()
-        self.Fn_Common_function(4) # 4-> Force Read All 
-    def Fn_startRssiScan(self):
+        self.Fn_Common_function(4) 
+    def Fn_startRssiScan(self):     # 5-> Force Read All 
         self.update_msgid_count()
-        self.Fn_Common_function(5) # 5-> Force Read All 
-    def Fn_Remove_devices(self):
+        self.Fn_Common_function(5) 
+    def Fn_Remove_devices(self):    # 6 -> Remove devices
         self.update_msgid_count()
-        self.Fn_Common_function(6) # 6 -> Remove devices
-    def Fn_add_devices(self):
+        self.Fn_Common_function(6) 
+    def Fn_add_devices(self):       # 7 -> add devices
         self.update_msgid_count()
-        self.Fn_Common_function(7) # 7 -> add devices
-    def Fn_Interval_Set(self):
+        self.Fn_Common_function(7) 
+    def Fn_Interval_Set(self):      # 8 -> interval Setting
         self.update_msgid_count()
-        self.Fn_Common_function(8) # 8 -> interval Setting
+        self.Fn_Common_function(8) 
 
     def Fn_Common_function(self,ievent):
         if(ievent == 1):
@@ -176,7 +175,6 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                 self.lineEdit_onboard_mac.text(),
                 self.lineEdit_Report_interval.text()
                 )
-
         if(ievent == 8):
             bolaction = True
             if(self.cb_Action.isChecked == False):
@@ -189,39 +187,16 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                 self.lineEdit_rx.text(),
                 bolaction
                 )
-
         self.TCP_Clinet_Send(strcmd)
-
-    def Get_Generated_ID(self):
-        if(len(self.lineEdit_Generated.text()) == 22 ):
-            strid = self.lineEdit_Generated.text()
-        else:
-            print(self.cb_Generated_id.currentText())
-            temp_id = re.findall(r"(?<=GenID\:)\w{22}",self.cb_Generated_id.currentText())     
-            strid = temp_id[0]
-        return strid   
-
-    def Get_Type(self):
-        if(len(self.lineEdit_Generated.text()) == 22 ):
-            strType = self.lineEdit_Generated.text()
-        else:
-            print(self.cb_Generated_id.currentText())
-            Type = re.findall(r"(?<=Type\:)\w+",self.cb_Generated_id.currentText())     
-            strType = Type[0]
-        return strType   
-
-
 
     def Fn_General_ON(self):
         self.Fn_General_Ctrl(True,self.Get_Generated_ID())
     def Fn_General_OFF(self):
         self.Fn_General_Ctrl(False,self.Get_Generated_ID())
     def Fn_General_Ctrl(self,Switch,strid):
-        if(len(strid) == 22 ):
-            self.update_msgid_count()                
-            self.TCP_Clinet_Send(self.My_SP.sendControlCommand(strid,self.tempmsgid,Switch))  # SP cmd to TCP Send   
-        else:
-            print("Generated_ID Len Error ")
+        self.update_msgid_count()              
+        self.TCP_Clinet_Send(self.My_SP.sendControlCommand(strid,self.tempmsgid,Switch))    
+
     # SP OPC Control 
     def Fn_OPC_status_Contorl(self):
         self.update_msgid_count()
@@ -230,33 +205,27 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         else:
             self.TCP_Clinet_Send(self.My_SP.Signal_Emit_Over_Current(self.Get_Generated_ID(),self.tempmsgid,False))
             
-        
-
     # Light Blub Horizontal slider control RGB and Brightness value*                                                   
     def ChangeColorRed(self):                       
-        pos = self.lb_hz_red_color.value()
-        self.label_red.setText("Red: " + str(pos))   
+        self.label_red_val.setText(str(self.lb_hz_red_color.value()))
     def ChangeColorGreen(self):
-        pos = self.lb_hz_green_color.value()
-        self.label_green.setText("Green:" + str(pos))
+        self.label_green_val.setText(str(self.lb_hz_green_color.value()))
     def ChangeColorBlue(self):
-        pos = self.lb_hz_blue_color.value()
-        self.label_blue.setText("Blue:" + str(pos))
+        self.label_blue_val.setText(str(self.lb_hz_blue_color.value()))
     def ChangeBrightness(self):
-        pos = self.lb_hz_brightness.value()
-        self.lb_pb_brightness.setValue(pos)
-    def update_msgid_count(self):
+        self.lb_pb_brightness.setValue(self.lb_hz_brightness.value())
+    # update msg id count
+    def update_msgid_count(self): 
         self.tempmsgid = self.msgid 
         self.msgid+=1
 
     # Setting Light Bulb Config value* 
-    def LB_Confige(self,bolswitch,itype,bolBrightness):
-        self.update_msgid_count()
+    def LB_Confige(self,bolswitch,itype,bolBrightness,int_msgid):
         LB_contor_confige = [
                             bolswitch,
                             itype,
                             self.Get_Generated_ID(),
-                            self.tempmsgid,
+                            int_msgid,
                             self.lb_pb_brightness.value(),
                             bolBrightness,
                             self.lb_hz_red_color.value(),
@@ -264,17 +233,22 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                             self.lb_hz_blue_color.value()
         ]
         return LB_contor_confige
-
+    # Create LB Cmd 
     def Fn_LB_General_OFF(self):
-        self.Fn_LB_Light_Ctrl(self.LB_Confige(False,0,False),1)
+        self.update_msgid_count()
+        self.Fn_LB_Light_Ctrl(self.LB_Confige(False,0,False,self.tempmsgid),1)
     def Fn_LB_General_ON(self):
-        self.Fn_LB_Light_Ctrl(self.LB_Confige(True,0,False),1)
+        self.update_msgid_count()
+        self.Fn_LB_Light_Ctrl(self.LB_Confige(True,0,False,self.tempmsgid),1)
     def Fn_LB_RGB_Brightness(self):
-        self.Fn_LB_Light_Ctrl(self.LB_Confige(False,1,True),2)
+        self.update_msgid_count()
+        self.Fn_LB_Light_Ctrl(self.LB_Confige(False,1,True,self.tempmsgid),2)
     def Fn_LB_RGB_Setting(self):
-        self.Fn_LB_Light_Ctrl(self.LB_Confige(False,1,False),3)
+        self.update_msgid_count()
+        self.Fn_LB_Light_Ctrl(self.LB_Confige(False,1,False,self.tempmsgid),3)
     def Fn_White_Brightnes(self):
-        self.Fn_LB_Light_Ctrl(self.LB_Confige(False,0,True),4)
+        self.update_msgid_count()
+        self.Fn_LB_Light_Ctrl(self.LB_Confige(False,0,True,self.tempmsgid),4)
 
     def Fn_LB_Light_Ctrl(self,confige,ievent):
         if(len(confige)==0):
@@ -290,25 +264,31 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                 strcmd = self.My_LB.sendControl_Color_White_Command(confige)
             self.TCP_Clinet_Send(strcmd)
             print(strcmd)
-            
+    
+    def Fn_Text_Clear_Send_Rec(self):
+        self.textEdit_rec.setText("")
+        self.textEdit_send.setText("")
+
     def Update_Text_Send_Rec_Text(self,payload):
         self.textEdit_send.setText("")
-        #self.textEdit_rec.setText("")
+        self.textEdit_rec.setText("")
         self.textEdit_send.setText(payload)
 
     def Label_Time_Sheet(self):
         self.label_Time.setText(time.strftime("%Y-%m-%d %H:%M:%S ", time.localtime()))
 
     def TCP_Clinet_Send(self,data):
+        
         try:
-            self.Update_Text_Send_Rec_Text(time.strftime("%Y-%m-%d %H:%M:%S : ", time.localtime()) + data)
             clientsock.send(data.encode())  # 傳送訊息
-            #recvdata = clientsock.recv(self.buffsize).decode('utf-8')  # 接收訊息，格式轉換
-            #self.textEdit_rec.insertPlainText( time.strftime("%Y-%m-%d %H:%M:%S : ", time.localtime()) + recvdata + '\n\r')
+            self.Update_Text_Send_Rec_Text(time.strftime("%Y-%m-%d %H:%M:%S:\r\n", time.localtime()) + data)
+            if(self.bolDisable_encryption == True):
+                recvdata = clientsock.recv(self.buffsize).decode('utf-8')  # 接收訊息，格式轉換
+                self.textEdit_rec.insertPlainText( time.strftime("%Y-%m-%d %H:%M:%S :\r\n", time.localtime()) + self.My_Gengral.rec_parser_sort_json(recvdata) + '\n\r')
         except socket.error as msg:
             print('Socket Error : %s ' %str(msg))
-            #Timesheet = time.strftime("%Y-%m-%d %H:%M:%S ", time.localtime())
-            #self.textEdit_rec.insertPlainText(Timesheet + " Error Result: " + str(msg) + '\n\r')
+            Timesheet = time.strftime("%Y-%m-%d %H:%M:%S ", time.localtime())
+            self.textEdit_rec.insertPlainText(Timesheet + " Error Result: " + str(msg) + '\n\r')
 
     def is_ip(self,ipAddr):
         try:
@@ -318,6 +298,22 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         except Exception as e:
             print("Error msg:" + str(e) )
 
+    def Get_Generated_ID(self):
+        if(len(self.lineEdit_Generated.text()) == 22 ):
+            strid = self.lineEdit_Generated.text()
+        else:
+            temp_id = re.findall(r"(?<=GenID\:)\w{22}",self.cb_Generated_id.currentText())     
+            strid = temp_id[0]
+        return strid   
+
+    def Get_Type(self):
+        if(len(self.lineEdit_Generated.text()) == 22 ):
+            strType = self.lineEdit_Generated.text()
+        else:
+            print(self.cb_Generated_id.currentText())
+            Type = re.findall(r"(?<=Type\:)\w+",self.cb_Generated_id.currentText())     
+            strType = Type[0]
+        return strType   
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

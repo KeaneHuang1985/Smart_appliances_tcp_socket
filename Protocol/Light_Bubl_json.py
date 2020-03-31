@@ -35,7 +35,7 @@ class LB_Json_Cmd:
         dict_functions ={'functions' : list_function}
         dict_data = {'data' :  dict_functions }
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload)
+        return json.dumps(dict_Payload,sort_keys=True,indent=2)
     
     def sendControl_RGB_Brightness_Command(self,confige):
         list_function = []
@@ -49,7 +49,7 @@ class LB_Json_Cmd:
         dict_functions ={'functions' : list_function}
         dict_data = {'data' :  dict_functions }
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload)
+        return json.dumps(dict_Payload,sort_keys=True,indent=2)
 
     def sendControl_Color_White_Command(self,confige):
         list_function = []
@@ -63,7 +63,7 @@ class LB_Json_Cmd:
         dict_functions ={'functions' : list_function}
         dict_data = {'data' :  dict_functions }
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload)
+        return json.dumps(dict_Payload,sort_keys=True,indent=2)
 
     def sendControl_RGB_Setting_Command(self,confige):  
         dict_header = {
@@ -81,8 +81,8 @@ class LB_Json_Cmd:
         dict_functions ={'functions' : list_function}
         dict_data = {'data' :  dict_functions }
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload)
-
+        return json.dumps(dict_Payload,sort_keys=True,indent=2)
+    
    
    
 

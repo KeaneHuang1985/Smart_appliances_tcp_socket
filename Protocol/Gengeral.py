@@ -12,32 +12,32 @@ class Gengeral_Function:
     def identifyDevice(self,targetDeviceId,int_msgid):
         dict_header = {'msgId':int_msgid,'msgType':"identifyDevice",'targetDeviceId':targetDeviceId}
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload)
+        return json.dumps(dict_Payload,sort_keys=True,indent=2)
 
     def OtaAvailable(self,targetDeviceId,int_msgid):
         dict_header = {'msgId':int_msgid,'msgType':"otaAvailable",'targetDeviceId':targetDeviceId}
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload)
+        return json.dumps(dict_Payload,sort_keys=True,indent=2)
 
     def readyForOta(self,targetDeviceId,int_msgid):
         dict_header = {'msgId':int_msgid,'msgType':"readyForOta",'targetDeviceId':targetDeviceId}
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload)
+        return json.dumps(dict_Payload,sort_keys=True,indent=2)
 
     def forceReadAll(self,targetDeviceId,int_msgid):
         dict_header = {'msgId':int_msgid,'msgType':"forceReadAll",'targetDeviceId':targetDeviceId}
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload)
+        return json.dumps(dict_Payload,sort_keys=True,indent=2)
 
     def startRssiScan(self,int_msgid):
         dict_header = {'msgId':int_msgid,'msgType':"startRssiScan"}
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload)
+        return json.dumps(dict_Payload,sort_keys=True,indent=2)
 
     def removeDevice(self,targetDeviceId,int_msgid):
         dict_header = {'msgId':int_msgid,'msgType':"removeDevice",'targetDeviceId':targetDeviceId}
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload)
+        return json.dumps(dict_Payload,sort_keys=True,indent=2)
     
     def addDevice(self,targetDeviceId,int_msgid,Nodeid,addr_mac,txinterval):
         int_id = Nodeid + 1
@@ -46,8 +46,8 @@ class Gengeral_Function:
         dict_dev = {  'device' : dict_dev_info }
         dict_data = {'data' : dict_dev } 
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload),int_id
-
+        return json.dumps(dict_Payload,sort_keys=True,indent=2),int_id
+    '''
     def Set_interval(self,targetDeviceId,int_msgid,listConfig):
         listDate = []
         dict_header = {'msgId':int_msgid,'msgType':"sendSystemControlCommand",'targetDeviceId':targetDeviceId}
@@ -57,9 +57,7 @@ class Gengeral_Function:
         dict_data = {'data' : dict_functions } 
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
         return json.dumps(dict_Payload)
-        
-
-
+    '''   
     def Type_Number_to_Dev_name(self,Typenumber):
         
         if(Typenumber == "9591"):
@@ -94,7 +92,13 @@ class Gengeral_Function:
                 return List_dev,int(Max_number_Node,16)
         
     def SSH_Connect_Read_mesh_dev_store(self,Addr_ip):
-        temp = paramiko.SSHClient()
+        try:
+            temp = paramiko.SSHClient()
+        except paramiko.SSHException as Error:
+            print("Error Code:" + str(Error))
+            temp.close()
+            return False
+
         temp.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         temp.connect(hostname= Addr_ip, username="root", password="I@T6tw9!+?") 
         ssh_stdin, ssh_stdout, ssh_stderr= temp.exec_command('cat /etc/config/mesh_dev_store') 
@@ -104,7 +108,7 @@ class Gengeral_Function:
             return strcmd
         else:
             return False
-
+       
     def parser_dev_info(self,strlog):
         list_dev = []
         strDev = ""
@@ -133,19 +137,38 @@ class Gengeral_Function:
     def Fin_Max_Node(self,Max_number_Node,Compare):
         Max_Node = int(Max_number_Node,16)
         Compare_node = int(Compare,16)
-
         if(Max_Node > Compare_node):
             return Max_number_Node
         else:
             return Compare_node
-        
+
+    def rec_parser_sort_json(self,data):
+        m = json.loads(data)
+        return json.dumps(m,sort_keys=True,indent=2)
+
+'''      
+class Display_json_format_style:
+
+    def __init__(self):
+        #self.My_Gengral = Gengeral_Function()
+        pass
+
+    def reParser_json_format(self,data):
+        #list_date = data.splitlines()   
+        removeplace = data.strip()
+        print(removeplace)
+
+strdata ='{ "header": { "msgId": 123, "sourceDeviceId": "S999979998414155674117", "msgType": "fullStateReport" }, "payload": { "data": { "functions": [ { "func": "ATR_COLOR_RED", "val": null }, { "func": "ATR_COLOR_BLUE", "val": null }, { "func": "ATR_COLOR_GREEN", "val": null }, { "func": "ATR_COLOR_WHITE", "val": 255 }, { "func": "ATR_BRIGHTNESS", "val": null }, { "func": "ATR_OPERATIONAL_STATUS", "val": "ON" } ] } } }'
+temp = Display_json_format_style()
+result = temp.reParser_json_format(strdata)
+'''        
         
 
 
     
 
     
-                
+        
             
                 
         

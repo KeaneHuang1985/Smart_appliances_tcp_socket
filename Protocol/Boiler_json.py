@@ -21,7 +21,7 @@ class Boiler_Json_Cmd:
         dict_functions ={'functions' : list_function}
         dict_data = {'data' :  dict_functions }
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload)
+        return json.dumps(dict_Payload,sort_keys=True,indent=2)
     
     def Force_Read(self,targetDeviceId,int_msgid):
 
@@ -32,7 +32,7 @@ class Boiler_Json_Cmd:
         }
         dict_data = {'data' : {}}
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload)
+        return json.dumps(dict_Payload,sort_keys=True,indent=2)
         
     def System_Control(self,targetDeviceId,int_msgid,intValue):
         list_function = []
@@ -46,5 +46,5 @@ class Boiler_Json_Cmd:
         dict_functions ={'functions' : list_function}
         dict_data = {'data' :  dict_functions }
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload)
+        return json.dumps(dict_Payload,sort_keys=True,indent=2)
 
