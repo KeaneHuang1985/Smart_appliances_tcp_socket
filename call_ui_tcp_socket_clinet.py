@@ -17,8 +17,7 @@ from UI.Ui_MainUI import Ui_MainWindow
 
 clientsock = socket.socket(socket.AF_INET,socket.SOCK_STREAM) 
 clientsock.settimeout(5)
-Disable_encryption = "38313139373435313133313534313230D4DDB986B58E2B1A938551E6975B9C334148CD48B3F58919CBF4CD3592450242DEE896FE8B724758ACA2482819ECE42CB68B94E260F1428A645F592D8BDB294D95B0940D7EBB74AD39AA84EF670F8F4938313139373435313133313534313230"
-
+Disable_encryption = "38313139373435313133313534313230D4DDB986B58E2B1A938551E6975B9C334148CD48B3F58919CBF4CD3592450242DEE896FE8B724758ACA2482819ECE42CB68B94E260F1428A645F592D8BDB294D95B0940D7EBB74AD39AA84EF670F8F4938313139373435313133313534313230" 
 class MyMainWindow(QMainWindow, Ui_MainWindow):
 
     def __init__(self, parent=None):
@@ -48,7 +47,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         #== Gengeral function 
         self.btn_ac_find.clicked.connect(self.Fn_Find_dev)              # find dev
         self.btn_ota_available.clicked.connect(self.Fn_OTA_Available)   # OTA Available
-        self.btn_ready_for_ota.clicked.connect(self.Fn_Ready_OTA)       # Ready_OTA
+        #self.btn_ready_for_ota.clicked.connect(self.Fn_Ready_OTA)       # Ready_OTA
         self.btn_force_read_all.clicked.connect(self.Fn_ForceReadAll)   # ForceReadall
         self.btn_start_rssi_scan.clicked.connect(self.Fn_startRssiScan) # Start Rssi Scan 
         self.btn_remove_dev.clicked.connect(self.Fn_Remove_devices)     # remove Dev
@@ -56,7 +55,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.btn_set_interval.clicked.connect(self.Fn_Interval_Set)     # Set Interval 
         self.btn_clear.clicked.connect(self.Fn_Text_Clear_Send_Rec)     # Clear Text
         self.btn_send_json.clicked.connect(self.Fn_send_json)           #Send msg form TCP Socket
-        self.btn_read_list.clicked.connect(self.Fn_mesh_dev_store)  #update devices list
+        self.btn_read_list.clicked.connect(self.Fn_mesh_dev_store)      #update devices list
         #====== SP / boiler =======
         self.btn_sp_on.clicked.connect(self.Fn_General_ON)              # General ON
         self.btn_sp_off.clicked.connect(self.Fn_General_OFF)            # General OFF
@@ -138,25 +137,22 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.Fn_Common_function(1) 
     def Fn_OTA_Available(self):     # 2-> OTA Available
         self.update_msgid_count()
-        self.Fn_Common_function(2) 
-    def Fn_Ready_OTA(self):         # 3-> Ready OTA 
-        self.update_msgid_count()
-        self.Fn_Common_function(3) 
+        self.Fn_Common_function(2)
     def Fn_ForceReadAll(self):      # 4-> Force Read All 
         self.update_msgid_count()
-        self.Fn_Common_function(4) 
+        self.Fn_Common_function(3) 
     def Fn_startRssiScan(self):     # 5-> Force Read All 
         self.update_msgid_count()
-        self.Fn_Common_function(5) 
+        self.Fn_Common_function(4) 
     def Fn_Remove_devices(self):    # 6 -> Remove devices
         self.update_msgid_count()
-        self.Fn_Common_function(6) 
+        self.Fn_Common_function(5) 
     def Fn_add_devices(self):       # 7 -> add devices
         self.update_msgid_count()
-        self.Fn_Common_function(7) 
+        self.Fn_Common_function(6) 
     def Fn_Interval_Set(self):      # 8 -> interval Setting
         self.update_msgid_count()
-        self.Fn_Common_function(8) 
+        self.Fn_Common_function(7) 
 
     def Fn_Common_function(self,ievent):
         if(ievent == 1):
@@ -164,14 +160,12 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         if(ievent == 2):
             strcmd = self.My_Gengral.OtaAvailable(self.Get_Generated_ID(),self.tempmsgid)
         if(ievent == 3):
-            strcmd = self.My_Gengral.readyForOta(self.Get_Generated_ID(),self.tempmsgid)
-        if(ievent == 4):
             strcmd = self.My_Gengral.forceReadAll(self.Get_Generated_ID(),self.tempmsgid)
-        if(ievent == 5): 
+        if(ievent == 4): 
             strcmd = self.My_Gengral.startRssiScan(self.tempmsgid)
-        if(ievent == 6): 
+        if(ievent == 5): 
             strcmd = self.My_Gengral.removeDevice(self.Get_Generated_ID(),self.tempmsgid)
-        if(ievent == 7):
+        if(ievent == 6):
             strcmd,self.int_Max_number_node = self.My_Gengral.addDevice(
                 self.Get_Generated_ID(),
                 self.tempmsgid,
@@ -179,7 +173,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                 self.lineEdit_onboard_mac.text(),
                 self.lineEdit_Report_interval.text()
                 )
-        if(ievent == 8):
+        if(ievent == 7):
             bolaction = True
             if(self.cb_Action.isChecked == False):
                 bolaction = False
@@ -208,7 +202,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             self.TCP_Clinet_Send(self.My_SP.Signal_Emit_Over_Current(self.Get_Generated_ID(),self.tempmsgid,True))
         else:
             self.TCP_Clinet_Send(self.My_SP.Signal_Emit_Over_Current(self.Get_Generated_ID(),self.tempmsgid,False))
-            
+        
     # Light Blub Horizontal slider control RGB and Brightness value*                                                   
     def ChangeColorRed(self):                       
         self.label_red_val.setText(str(self.dial_red.value()))
@@ -227,12 +221,16 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
     # Setting Light Bulb Config value* 
     def LB_Confige(self,bolswitch,itype,bolBrightness,int_msgid):
+        if(type == 0):
+            brvalue = self.lb_pb_brightness.value()
+        else:
+            brvalue = self.lb_pb_rgbbrightness.value()
         LB_contor_confige = [
                             bolswitch,
                             itype,
                             self.Get_Generated_ID(),
                             int_msgid,
-                            self.lb_pb_brightness.value(),
+                            brvalue,
                             bolBrightness,
                             self.dial_red.value(),
                             self.dial_green.value(),

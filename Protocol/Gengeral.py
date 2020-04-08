@@ -12,32 +12,27 @@ class Gengeral_Function:
     def identifyDevice(self,targetDeviceId,int_msgid):
         dict_header = {'msgId':int_msgid,'msgType':"identifyDevice",'targetDeviceId':targetDeviceId}
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload,sort_keys=True,indent=2)
+        return json.dumps(dict_Payload)
 
     def OtaAvailable(self,targetDeviceId,int_msgid):
         dict_header = {'msgId':int_msgid,'msgType':"otaAvailable",'targetDeviceId':targetDeviceId}
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload,sort_keys=True,indent=2)
-
-    def readyForOta(self,targetDeviceId,int_msgid):
-        dict_header = {'msgId':int_msgid,'msgType':"readyForOta",'targetDeviceId':targetDeviceId}
-        dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload,sort_keys=True,indent=2)
+        return json.dumps(dict_Payload)
 
     def forceReadAll(self,targetDeviceId,int_msgid):
         dict_header = {'msgId':int_msgid,'msgType':"forceReadAll",'targetDeviceId':targetDeviceId}
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload,sort_keys=True,indent=2)
+        return json.dumps(dict_Payload)
 
     def startRssiScan(self,int_msgid):
         dict_header = {'msgId':int_msgid,'msgType':"startRssiScan"}
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload,sort_keys=True,indent=2)
+        return json.dumps(dict_Payload)
 
     def removeDevice(self,targetDeviceId,int_msgid):
         dict_header = {'msgId':int_msgid,'msgType':"removeDevice",'targetDeviceId':targetDeviceId}
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload,sort_keys=True,indent=2)
+        return json.dumps(dict_Payload)
     
     def addDevice(self,targetDeviceId,int_msgid,Nodeid,addr_mac,txinterval):
         int_id = Nodeid + 1
@@ -46,7 +41,7 @@ class Gengeral_Function:
         dict_dev = {  'device' : dict_dev_info }
         dict_data = {'data' : dict_dev } 
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload,sort_keys=True,indent=2),int_id
+        return json.dumps(dict_Payload),int_id
     '''
     def Set_interval(self,targetDeviceId,int_msgid,listConfig):
         listDate = []
