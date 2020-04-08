@@ -80,8 +80,8 @@ class Gengeral_Function:
         Result = self.SSH_Connect_Read_mesh_dev_store(Addr_ip)
 
         if(Result == False):
-            print(" Read_mesh_dev_store Fail")
-            return False
+            print("Read_mesh_dev_store Fail")
+            return False,0
         else:
             List_dev,Max_number_Node = self.parser_dev_info(Result)
             if(List_dev == False):
@@ -143,8 +143,15 @@ class Gengeral_Function:
             return Compare_node
 
     def rec_parser_sort_json(self,data):
-        m = json.loads(data)
-        return json.dumps(m,sort_keys=True,indent=2)
+        try:
+            m = json.loads(data)
+            n = json.dumps(m,sort_keys=True,indent=2)
+            return n 
+        except Exception as Error:
+            print("Error at Rec_parser:" + str(Error))
+            return str(data)
+            
+        
 
 '''      
 class Display_json_format_style:

@@ -24,6 +24,29 @@
         </property>
        </widget>
       </item>
+      <item row="5" column="0">
+       <widget class="QPushButton" name="btn_close">
+        <property name="text">
+         <string>Disconnect</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_Time">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Time</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
       <item row="3" column="0">
        <widget class="QLineEdit" name="lineEdit">
         <property name="inputMask">
@@ -44,27 +67,10 @@
         </property>
        </widget>
       </item>
-      <item row="5" column="0">
-       <widget class="QPushButton" name="btn_close">
-        <property name="text">
-         <string>Disconnect</string>
-        </property>
-       </widget>
-      </item>
       <item row="2" column="0">
        <widget class="QLabel" name="label_tcp_socket_state">
         <property name="text">
          <string>Disconnect</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_Time">
-        <property name="text">
-         <string>Time</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -83,17 +89,24 @@
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QPushButton" name="btn_read_mesh_dev">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
+        <widget class="QPushButton" name="btn_read_list">
          <property name="text">
-          <string>Update Dev</string>
+          <string>Read List</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="cb_Generated_id"/>
+        <widget class="QComboBox" name="cb_Generated_id">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maxCount">
+          <number>30</number>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QPushButton" name="btn_ac_find">
@@ -131,17 +144,10 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="btn_send_json">
+        <widget class="QGroupBox" name="GB_Setting">
          <property name="enabled">
           <bool>false</bool>
          </property>
-         <property name="text">
-          <string>Send Json Format</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="groupBox">
          <property name="title">
           <string>Add Devces</string>
          </property>
@@ -350,46 +356,86 @@
       </property>
       <layout class="QGridLayout" name="gridLayout_5">
        <item row="19" column="0">
-        <widget class="QPushButton" name="btn_lb_light_on">
-         <property name="text">
-          <string>Light ON</string>
-         </property>
-        </widget>
-       </item>
-       <item row="17" column="0">
         <widget class="QPushButton" name="btn_lb_rgb_brightness">
          <property name="text">
           <string>RGB Brightness </string>
          </property>
         </widget>
        </item>
-       <item row="18" column="0">
-        <widget class="QPushButton" name="btn_lb_white_brghtness">
-         <property name="text">
-          <string>White Brghtness</string>
+       <item row="2" column="0">
+        <widget class="QProgressBar" name="lb_pb_brightness">
+         <property name="styleSheet">
+          <string notr="true"/>
          </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QSlider" name="lb_hz_brightness">
          <property name="minimum">
-          <number>1</number>
+          <number>0</number>
          </property>
          <property name="maximum">
-          <number>100</number>
-         </property>
-         <property name="singleStep">
-          <number>0</number>
+          <number>255</number>
          </property>
          <property name="value">
           <number>50</number>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
          </property>
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
         </widget>
        </item>
+       <item row="11" column="0">
+        <widget class="QDial" name="dial_green">
+         <property name="maximum">
+          <number>255</number>
+         </property>
+        </widget>
+       </item>
+       <item row="13" column="0">
+        <widget class="QDial" name="dial_blue">
+         <property name="maximum">
+          <number>255</number>
+         </property>
+        </widget>
+       </item>
        <item row="9" column="0">
+        <widget class="QDial" name="dial_red">
+         <property name="minimum">
+          <number>0</number>
+         </property>
+         <property name="maximum">
+          <number>255</number>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0">
+        <widget class="QDial" name="dial_br">
+         <property name="minimum">
+          <number>0</number>
+         </property>
+         <property name="maximum">
+          <number>255</number>
+         </property>
+         <property name="value">
+          <number>50</number>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="0">
+        <widget class="QLabel" name="label_green">
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600; color:#00aa00;&quot;&gt;Green&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item row="21" column="0">
+        <widget class="QPushButton" name="btn_lb_light_on">
+         <property name="text">
+          <string>Light ON</string>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="0">
         <widget class="QLabel" name="label_blue">
          <property name="text">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#5500ff;&quot;&gt;Blue&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -399,53 +445,17 @@
          </property>
         </widget>
        </item>
-       <item row="16" column="0">
+       <item row="20" column="0">
+        <widget class="QPushButton" name="btn_lb_white_brghtness">
+         <property name="text">
+          <string>White Brghtness</string>
+         </property>
+        </widget>
+       </item>
+       <item row="18" column="0">
         <widget class="QPushButton" name="btn_lb_rgb_light_setting">
          <property name="text">
           <string>RGB Setting </string>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="0">
-        <widget class="QLabel" name="label_green">
-         <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600; color:#00aa00;&quot;&gt;Green&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="0">
-        <widget class="QSlider" name="lb_hz_red_color">
-         <property name="maximum">
-          <number>255</number>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="0">
-        <widget class="QSlider" name="lb_hz_green_color">
-         <property name="maximum">
-          <number>255</number>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0" colspan="2">
-        <widget class="QProgressBar" name="lb_pb_brightness">
-         <property name="styleSheet">
-          <string notr="true"/>
-         </property>
-         <property name="minimum">
-          <number>0</number>
-         </property>
-         <property name="maximum">
-          <number>100</number>
-         </property>
-         <property name="value">
-          <number>50</number>
          </property>
         </widget>
        </item>
@@ -459,24 +469,7 @@
          </property>
         </widget>
        </item>
-       <item row="15" column="0" colspan="2">
-        <widget class="QSlider" name="lb_hz_blue_color">
-         <property name="maximum">
-          <number>255</number>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="20" column="0">
-        <widget class="QPushButton" name="btn_lb_light_off">
-         <property name="text">
-          <string>Light OFF</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="0">
+       <item row="8" column="0">
         <widget class="QLabel" name="label_red">
          <property name="text">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#ff0000;&quot;&gt;Red&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -486,7 +479,7 @@
          </property>
         </widget>
        </item>
-       <item row="5" column="1">
+       <item row="8" column="1">
         <widget class="QLabel" name="label_red_val">
          <property name="text">
           <string>0</string>
@@ -496,17 +489,14 @@
          </property>
         </widget>
        </item>
-       <item row="7" column="1">
-        <widget class="QLabel" name="label_green_val">
+       <item row="22" column="0">
+        <widget class="QPushButton" name="btn_lb_light_off">
          <property name="text">
-          <string>0</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
+          <string>Light OFF</string>
          </property>
         </widget>
        </item>
-       <item row="9" column="1">
+       <item row="12" column="1">
         <widget class="QLabel" name="label_blue_val">
          <property name="text">
           <string>0</string>
@@ -516,24 +506,34 @@
          </property>
         </widget>
        </item>
+       <item row="10" column="1">
+        <widget class="QLabel" name="label_green_val">
+         <property name="text">
+          <string>0</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
       </layout>
-      <zorder>lb_hz_blue_color</zorder>
       <zorder>label_10</zorder>
       <zorder>btn_lb_light_on</zorder>
       <zorder>btn_lb_rgb_light_setting</zorder>
       <zorder>btn_lb_rgb_brightness</zorder>
       <zorder>btn_lb_light_off</zorder>
       <zorder>label_red</zorder>
-      <zorder>lb_hz_red_color</zorder>
       <zorder>label_green</zorder>
-      <zorder>lb_hz_green_color</zorder>
       <zorder>label_blue</zorder>
-      <zorder>lb_hz_brightness</zorder>
-      <zorder>lb_pb_brightness</zorder>
       <zorder>btn_lb_white_brghtness</zorder>
       <zorder>label_red_val</zorder>
       <zorder>label_green_val</zorder>
       <zorder>label_blue_val</zorder>
+      <zorder>lb_pb_brightness</zorder>
+      <zorder>dial_br</zorder>
+      <zorder>dial_red</zorder>
+      <zorder>dial_green</zorder>
+      <zorder>dial_blue</zorder>
      </widget>
     </item>
     <item>
@@ -565,10 +565,20 @@
       <item row="3" column="0">
        <widget class="QTextEdit" name="textEdit_send"/>
       </item>
-      <item row="4" column="0" colspan="2">
+      <item row="4" column="1">
        <widget class="QPushButton" name="btn_clear">
         <property name="text">
          <string>Clear Msg</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QPushButton" name="btn_send_json">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Send Msg</string>
         </property>
        </widget>
       </item>

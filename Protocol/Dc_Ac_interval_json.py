@@ -14,7 +14,7 @@ class Interval_set_Json_Cmd:
         dict_functions ={'functions' : listDate}
         dict_data = {'data' : dict_functions } 
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload,sort_keys=True,indent=2)
+        return json.dumps(dict_Payload)
         
     def sendSystemControlCommand_event2(self,targetDeviceId,int_msgid,tx,rx):
         listDate = []
@@ -24,7 +24,7 @@ class Interval_set_Json_Cmd:
         dict_functions ={'functions' : listDate}
         dict_data = {'data' : dict_functions } 
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload,sort_keys=True,indent=2)
+        return json.dumps(dict_Payload)
 
     def sendSystemControlCommand_event3(self,targetDeviceId,int_msgid,tx):
         listDate = []
@@ -33,7 +33,7 @@ class Interval_set_Json_Cmd:
         dict_functions ={'functions' : listDate}
         dict_data = {'data' : dict_functions } 
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload,sort_keys=True,indent=2)
+        return json.dumps(dict_Payload)
 
     def Set_Interval_contorl(self,Type,targetDeviceId,int_msgid,tx,rx,bolactive):
         if(Type == "WS" or Type == "MS"):

@@ -22,7 +22,7 @@ class SP_Json_Cmd:
         dict_functions ={'functions' : list_function}
         dict_data = {'data' :  dict_functions }
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload,sort_keys=True,indent=2)
+        return json.dumps(dict_Payload)
 
     def Signal_Emit_Over_Current(self,targetDeviceId,int_msgid,bolresult):
         list_function = []
@@ -32,7 +32,7 @@ class SP_Json_Cmd:
         dict_functions ={'functions' : list_function}
         dict_data = {'data' :  dict_functions }
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload,sort_keys=True,indent=2)
+        return json.dumps(dict_Payload)
 
 
     def Disable_Power_Threshold(self,targetDeviceId,int_msgid):
@@ -47,7 +47,7 @@ class SP_Json_Cmd:
         dict_functions ={'functions' : list_function}
         dict_data = {'data' :  dict_functions }
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload,sort_keys=True,indent=2)
+        return json.dumps(dict_Payload)
 
     def Force_Read(self,targetDeviceId,int_msgid):
         dict_header = {
@@ -57,7 +57,7 @@ class SP_Json_Cmd:
         }
         dict_data = {'data' : {}}
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload,sort_keys=True,indent=2)
+        return json.dumps(dict_Payload)
 
     def System_Control(self,targetDeviceId,int_msgid,txtime):
         list_function = []
@@ -72,7 +72,7 @@ class SP_Json_Cmd:
         dict_functions ={'functions' : list_function}
         dict_data = {'data' :  dict_functions }
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload,sort_keys=True,indent=2)
+        return json.dumps(dict_Payload)
 
     def identifyDevice(self,targetDeviceId,int_msgid):
         dict_header = {
@@ -82,4 +82,4 @@ class SP_Json_Cmd:
         }
         dict_data = {'data' : {}}
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload,sort_keys=True,indent=2)
+        return json.dumps(dict_Payload)

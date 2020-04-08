@@ -45,8 +45,6 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         #== TCP Socket === 
         self.btn_connect.clicked.connect(self.Fn_Socket_Connect)        #Connect TCP Socket
         self.btn_close.clicked.connect(self.Fn_socket_disconnect)       #Disconnet TCP Socket
-        self.btn_send_json.clicked.connect(self.Fn_send_json)           #Send msg form TCP Socket
-        self.btn_read_mesh_dev.clicked.connect(self.Fn_mesh_dev_store)
         #== Gengeral function 
         self.btn_ac_find.clicked.connect(self.Fn_Find_dev)              # find dev
         self.btn_ota_available.clicked.connect(self.Fn_OTA_Available)   # OTA Available
@@ -57,15 +55,18 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.btn_add_dev.clicked.connect(self.Fn_add_devices)           # add dev
         self.btn_set_interval.clicked.connect(self.Fn_Interval_Set)     # Set Interval 
         self.btn_clear.clicked.connect(self.Fn_Text_Clear_Send_Rec)     # Clear Text
+        self.btn_send_json.clicked.connect(self.Fn_send_json)           #Send msg form TCP Socket
+        self.btn_read_list.clicked.connect(self.Fn_mesh_dev_store)  #update devices list
         #====== SP / boiler =======
         self.btn_sp_on.clicked.connect(self.Fn_General_ON)              # General ON
         self.btn_sp_off.clicked.connect(self.Fn_General_OFF)            # General OFF
         self.btn_SP_OPC.clicked.connect(self.Fn_OPC_status_Contorl)     # OPC
         #====== LB =======
-        self.lb_hz_red_color.valueChanged.connect(self.ChangeColorRed)       # Horizontal slider red
-        self.lb_hz_green_color.valueChanged.connect(self.ChangeColorGreen)   # Horizontal slider green
-        self.lb_hz_blue_color.valueChanged.connect(self.ChangeColorBlue)     # Horizontal slider blue 
-        self.lb_hz_brightness.valueChanged.connect(self.ChangeBrightness)    # Horizontal slider Brightness 
+        self.dial_red.valueChanged.connect(self.ChangeColorRed)       # Horizontal slider red
+        self.dial_green.valueChanged.connect(self.ChangeColorGreen)   # Horizontal slider green
+        self.dial_blue.valueChanged.connect(self.ChangeColorBlue)     # Horizontal slider blue 
+        #self.lb_hz_brightness.valueChanged.connect(self.ChangeBrightness)    # Horizontal slider Brightness 
+        self.dial_br.valueChanged.connect(self.ChangeBrightness)             # Horizontal slider Brightness 
         self.btn_lb_rgb_light_setting.clicked.connect(self.Fn_LB_RGB_Setting)# Setting RGB Color
         self.btn_lb_rgb_brightness.clicked.connect(self.Fn_LB_RGB_Brightness)# Setting RGB Brightness 
         self.btn_lb_white_brghtness.clicked.connect(self.Fn_White_Brightnes) # Setting White Brightness
@@ -77,14 +78,17 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             self.GB_LB.setEnabled(True)
             self.GB_SP.setEnabled(True)
             self.GB_Commom.setEnabled(True)
+            self.GB_Setting.setEnabled(True)
+            self.btn_send_json.setEnabled(True)
             self.btn_connect.setEnabled(False)
             self.label_tcp_socket_state.setText("Connect")
         else:
             self.GB_SP.setEnabled(False)
             self.GB_Commom.setEnabled(False)
             self.GB_LB.setEnabled(False)
+            self.GB_Setting.setEnabled(False)
+            self.btn_send_json.setEnabled(False)
             self.btn_connect.setEnabled(True)
-            self.btn_read_mesh_dev.setEnabled(False)
             self.label_tcp_socket_state.setText("Disconnect")
 
     def Fn_Socket_Connect(self):    #TCP Socket Function and ssh  connect 
@@ -207,13 +211,15 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             
     # Light Blub Horizontal slider control RGB and Brightness value*                                                   
     def ChangeColorRed(self):                       
-        self.label_red_val.setText(str(self.lb_hz_red_color.value()))
+        self.label_red_val.setText(str(self.dial_red.value()))
     def ChangeColorGreen(self):
-        self.label_green_val.setText(str(self.lb_hz_green_color.value()))
+        self.label_green_val.setText(str(self.dial_green.value()))
     def ChangeColorBlue(self):
-        self.label_blue_val.setText(str(self.lb_hz_blue_color.value()))
+        self.label_blue_val.setText(str(self.dial_blue.value()))
     def ChangeBrightness(self):
-        self.lb_pb_brightness.setValue(self.lb_hz_brightness.value())
+        #self.lb_pb_brightness.setValue(self.lb_hz_brightness.value())
+        self.lb_pb_brightness.setValue(self.dial_br.value())
+
     # update msg id count
     def update_msgid_count(self): 
         self.tempmsgid = self.msgid 
@@ -228,9 +234,9 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                             int_msgid,
                             self.lb_pb_brightness.value(),
                             bolBrightness,
-                            self.lb_hz_red_color.value(),
-                            self.lb_hz_green_color.value(),
-                            self.lb_hz_blue_color.value()
+                            self.dial_red.value(),
+                            self.dial_green.value(),
+                            self.dial_blue.value()
         ]
         return LB_contor_confige
     # Create LB Cmd 
@@ -278,11 +284,10 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.label_Time.setText(time.strftime("%Y-%m-%d %H:%M:%S ", time.localtime()))
 
     def TCP_Clinet_Send(self,data):
-        
         try:
             clientsock.send(data.encode())  # 傳送訊息
-            self.Update_Text_Send_Rec_Text(time.strftime("%Y-%m-%d %H:%M:%S:\r\n", time.localtime()) + data)
             if(self.bolDisable_encryption == True):
+                self.Update_Text_Send_Rec_Text(time.strftime("%Y-%m-%d %H:%M:%S:\r\n", time.localtime()) + self.My_Gengral.rec_parser_sort_json(data) +'\n\r')
                 recvdata = clientsock.recv(self.buffsize).decode('utf-8')  # 接收訊息，格式轉換
                 self.textEdit_rec.insertPlainText( time.strftime("%Y-%m-%d %H:%M:%S :\r\n", time.localtime()) + self.My_Gengral.rec_parser_sort_json(recvdata) + '\n\r')
         except socket.error as msg:
@@ -310,7 +315,6 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         if(len(self.lineEdit_Generated.text()) == 22 ):
             strType = self.lineEdit_Generated.text()
         else:
-            print(self.cb_Generated_id.currentText())
             Type = re.findall(r"(?<=Type\:)\w+",self.cb_Generated_id.currentText())     
             strType = Type[0]
         return strType   
