@@ -1,7 +1,7 @@
 import paramiko
 import re
 import json
-
+import random
 dict_data = {'data' : {}}
 
 class Gengeral_Function:
@@ -9,52 +9,37 @@ class Gengeral_Function:
     def __init__(self):
         pass
     
-    def identifyDevice(self,targetDeviceId,int_msgid):
-        dict_header = {'msgId':int_msgid,'msgType':"identifyDevice",'targetDeviceId':targetDeviceId}
+    def Commom_msgType(self,imsgevent):
+        if(imsgevent == 1):
+            return 'identifyDevice'
+        if(imsgevent == 2):
+            return 'otaAvailable'
+        if(imsgevent == 3):
+            return 'forceReadAll'
+        if(imsgevent == 4):
+            return 'startRssiScan'
+        if(imsgevent == 5):
+            return 'removeDevice'
+
+    def Commom_Cmd(self,targetDeviceId,imsgevent):
+        dict_header = {
+            'msgId':random.randint(0,999),
+            'msgType':self.Commom_msgType(imsgevent), # return msg Type
+            'targetDeviceId':targetDeviceId
+            } 
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
         return json.dumps(dict_Payload)
 
-    def OtaAvailable(self,targetDeviceId,int_msgid):
-        dict_header = {'msgId':int_msgid,'msgType':"otaAvailable",'targetDeviceId':targetDeviceId}
-        dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload)
-
-    def forceReadAll(self,targetDeviceId,int_msgid):
-        dict_header = {'msgId':int_msgid,'msgType':"forceReadAll",'targetDeviceId':targetDeviceId}
-        dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload)
-
-    def startRssiScan(self,int_msgid):
-        dict_header = {'msgId':int_msgid,'msgType':"startRssiScan"}
-        dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload)
-
-    def removeDevice(self,targetDeviceId,int_msgid):
-        dict_header = {'msgId':int_msgid,'msgType':"removeDevice",'targetDeviceId':targetDeviceId}
-        dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload)
-    
-    def addDevice(self,targetDeviceId,int_msgid,Nodeid,addr_mac,txinterval):
+    def addDevice(self,targetDeviceId,Nodeid,addr_mac,txinterval):
         int_id = Nodeid + 1
-        dict_header = {'msgId':int_msgid,'msgType':"addDevice",'targetDeviceId':targetDeviceId}
+        dict_header = {'msgId':random.randint(0,999),'msgType':"addDevice",'targetDeviceId':targetDeviceId}
         dict_dev_info = {  'id' :  hex(int_id)[2:] , 'key' : addr_mac , 'reportInterval' : txinterval}
         dict_dev = {  'device' : dict_dev_info }
         dict_data = {'data' : dict_dev } 
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
         return json.dumps(dict_Payload),int_id
-    '''
-    def Set_interval(self,targetDeviceId,int_msgid,listConfig):
-        listDate = []
-        dict_header = {'msgId':int_msgid,'msgType':"sendSystemControlCommand",'targetDeviceId':targetDeviceId}
-        listDate.append({ 'func' : "ATR_REPORT_PERIOD", 'val': tx}) 
-        listDate.append({ 'func' : "ATR WAKEUP PERIOD", 'val': rx}) 
-        dict_functions ={'functions' : listDate}
-        dict_data = {'data' : dict_functions } 
-        dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload)
-    '''   
-    def Type_Number_to_Dev_name(self,Typenumber):
-        
+
+    def Type_Number_to_Dev_name(self,Typenumber):  
         if(Typenumber == "9591"):
             return "TH"
         if(Typenumber == "9573"):
@@ -73,7 +58,6 @@ class Gengeral_Function:
 
     def Read_Dev_list(self,Addr_ip):
         Result = self.SSH_Connect_Read_mesh_dev_store(Addr_ip)
-
         if(Result == False):
             print("Read_mesh_dev_store Fail")
             return False,0
@@ -146,24 +130,6 @@ class Gengeral_Function:
             print("Error at Rec_parser:" + str(Error))
             return str(data)
             
-        
-
-'''      
-class Display_json_format_style:
-
-    def __init__(self):
-        #self.My_Gengral = Gengeral_Function()
-        pass
-
-    def reParser_json_format(self,data):
-        #list_date = data.splitlines()   
-        removeplace = data.strip()
-        print(removeplace)
-
-strdata ='{ "header": { "msgId": 123, "sourceDeviceId": "S999979998414155674117", "msgType": "fullStateReport" }, "payload": { "data": { "functions": [ { "func": "ATR_COLOR_RED", "val": null }, { "func": "ATR_COLOR_BLUE", "val": null }, { "func": "ATR_COLOR_GREEN", "val": null }, { "func": "ATR_COLOR_WHITE", "val": 255 }, { "func": "ATR_BRIGHTNESS", "val": null }, { "func": "ATR_OPERATIONAL_STATUS", "val": "ON" } ] } } }'
-temp = Display_json_format_style()
-result = temp.reParser_json_format(strdata)
-'''        
         
 
 

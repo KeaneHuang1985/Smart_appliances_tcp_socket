@@ -1,14 +1,14 @@
 import json
-
+import random
 class SP_Json_Cmd:
 
     def __init__(self):
         pass
     
-    def sendControlCommand(self,targetDeviceId,int_msgid,bolT_type):
+    def sendControlCommand(self,targetDeviceId,bolT_type):
         list_function = []
         dict_header = {
-            'msgId'    :   int_msgid,
+            'msgId'    :   random.randint(0,999),
             'msgType'             :   "sendControlCommand",
             'targetDeviceId'           :   targetDeviceId
         }
@@ -17,69 +17,23 @@ class SP_Json_Cmd:
             str_type = "ON"
         dict_function1 = { 'func' : "ATR_OPERATIONAL_STATUS", 'val': str_type}
         list_function.append(dict_function1)
-        dict_function2 = { 'func' : "ATRMAXPOWERMEASUREMENTTHRESHOLD", 'val': 500.00}
-        list_function.append(dict_function2)
         dict_functions ={'functions' : list_function}
         dict_data = {'data' :  dict_functions }
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
         return json.dumps(dict_Payload)
 
-    def Signal_Emit_Over_Current(self,targetDeviceId,int_msgid,bolresult):
+    def Power_Threshold(self,targetDeviceId,bolresult,intpower):
         list_function = []
-        dict_header = {'msgId':int_msgid,'sourceDeviceId':targetDeviceId,'msgType':"signalEmit"}
-        dict_function = { 'func' : "SGN OVER CURRENT PROTECTION", 'val': bolresult}
-        list_function.append(dict_function)
+        dict_header = {'msgId':random.randint(0,999),'msgType':"sendControlCommand",'targetDeviceId':targetDeviceId}
+
+        if(bolresult == True):
+            list_function.append({'func' : "ATR_OPERATIONAL_STATUS", 'val': "False"})
+            list_function.append({'func' : "ATR_MAX_POWER_MEASUREMENT_THRESHOLD", 'val':float(intpower)})
+        if(bolresult == False):
+            list_function.append({'func' : "ATR_MAX_POWER_MEASUREMENT_THRESHOLD", 'val':intpower})
+        
         dict_functions ={'functions' : list_function}
         dict_data = {'data' :  dict_functions }
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
         return json.dumps(dict_Payload)
 
-
-    def Disable_Power_Threshold(self,targetDeviceId,int_msgid):
-        list_function = []
-        dict_header = {
-            'msgId'    :   int_msgid,
-            'msgType'             :   "sendControlCommand",
-            'targetDeviceId'           :   targetDeviceId
-        }
-        dict_function = { 'func' : "ATRMAXPOWERMEASUREMENTTHRESHOLD", 'val': "0.00"}
-        list_function.append(dict_function)
-        dict_functions ={'functions' : list_function}
-        dict_data = {'data' :  dict_functions }
-        dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload)
-
-    def Force_Read(self,targetDeviceId,int_msgid):
-        dict_header = {
-            'msgId'             :   int_msgid,  
-            'targetDeviceId'    :   targetDeviceId,
-            'msgType'           :   "forceRead"
-        }
-        dict_data = {'data' : {}}
-        dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload)
-
-    def System_Control(self,targetDeviceId,int_msgid,txtime):
-        list_function = []
-        dict_header = {
-            'msgId'             :   int_msgid,
-            'targetDeviceId'    :   targetDeviceId,
-            'msgType'           :   "sendSystemControlCommand",
-           
-        }
-        dict_function = { 'func' : "ATR_REPORT_PERIOD", 'val': txtime}
-        list_function.append(dict_function)
-        dict_functions ={'functions' : list_function}
-        dict_data = {'data' :  dict_functions }
-        dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload)
-
-    def identifyDevice(self,targetDeviceId,int_msgid):
-        dict_header = {
-            'msgId'    :   int_msgid,
-            'msgType'             :   "identifyDevice",
-            'targetDeviceId'           :   targetDeviceId
-        }
-        dict_data = {'data' : {}}
-        dict_Payload = {'header': dict_header , 'payload' : dict_data }
-        return json.dumps(dict_Payload)

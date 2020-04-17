@@ -1,5 +1,5 @@
 import json
-
+import random
 
 class LB_Json_Cmd:
 
@@ -83,7 +83,18 @@ class LB_Json_Cmd:
         dict_Payload = {'header': dict_header , 'payload' : dict_data }
         return json.dumps(dict_Payload)
     
-   
-   
+    def LB_Confige_for_Auto_test(self,tragetid,brvalue,ired,igreen,iblue):
+        LB_contor_confige = [
+                            True,
+                            1,
+                            tragetid,
+                            random.randint(0,999),
+                            brvalue,
+                            0,
+                            ired,
+                            igreen,
+                            iblue
+        ]
+        return LB_contor_confige
 
 
