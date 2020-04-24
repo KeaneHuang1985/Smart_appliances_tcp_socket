@@ -76,6 +76,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.btn_lb_light_on.clicked.connect(self.Fn_LB_General_ON)          # Light ON
         # Light bulb Auto RGB Test
         self.btn_auto_rgb_test.clicked.connect(self.Fn_LB_Auot_RGB_Test)
+        self.btn_auto_rgb_br_test.clicked.connect(self.Fn_LB_Auto_RGB_BR_Test)
 
     def TCP_Conn_Enable_GB(self,bolresult): # UI Contrl 
         if(bolresult == True):
@@ -189,7 +190,8 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
     # SP OPC Control 
     def Fn_OPC_status_Contorl(self):
-        if(self.rb_sp_enable.isChecked() == True):
+        if(self.cb_sp_enable.isChecked()):
+        #if(self.rb_sp_enable.isChecked() == True):
             self.TCP_Clinet_Send(self.My_SP.Power_Threshold(self.Get_Generated_ID(),True,self.spinBox_sp_power.value()))
         else:
             self.TCP_Clinet_Send(self.My_SP.Power_Threshold(self.Get_Generated_ID(),False,0))
@@ -251,35 +253,72 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     def Fn_White_Brightnes(self):
         self.Fn_LB_Light_Ctrl(self.LB_Confige(False,0,True),4)
 
+    def Fn_LB_Auto_RGB_BR_Test(self):
+        offset = 1
+        index = 100
+        targetid = self.Get_Generated_ID()
+        self.bolable_Rec = False
+
+        while(offset < index):
+            self.Fn_LB_Light_Ctrl(self.My_LB.LB_Confige_for_Auto_test(targetid,offset,255,255,100),3)
+            time.sleep(1)
+            print("Br value : " + str(offset))
+            offset += 10
+            offset = offset if offset < 100 else 100
+            print("Next Br value : " + str(offset))
+        offset = 1 
+
+        while(offset < index):
+            self.Fn_LB_Light_Ctrl(self.My_LB.LB_Confige_for_Auto_test(targetid,offset,255,100,255),3)
+            time.sleep(1)
+            print("Br value : " + str(offset))
+            offset += 10
+            offset = offset if offset < 100 else 100
+            print("Next Br value : " + str(offset))
+        offset = 1 
+    
+        while(offset < index):
+            self.Fn_LB_Light_Ctrl(self.My_LB.LB_Confige_for_Auto_test(targetid,offset,100,255,255),3)
+            time.sleep(1)
+            print("Br value : " + str(offset))
+            offset += 10
+            offset = offset if offset < 100 else 100
+            print("Next Br value : " + str(offset))
+        offset = 1 
+
     def Fn_LB_Auot_RGB_Test(self):
         offset = 1
         index = 255
         targetid = self.Get_Generated_ID()
         self.bolable_Rec = False
+        
         while(offset < index):
-            self.update_msgid_count()
             self.Fn_LB_Light_Ctrl(self.My_LB.LB_Confige_for_Auto_test(targetid,100,255,offset,0),3)
             time.sleep(1)
             print("Red value:",offset)
             offset += 10
+            offset = offset if offset < 255 else 255
         offset = 1
+
         while(offset < index):
-            self.update_msgid_count()
             self.Fn_LB_Light_Ctrl(self.My_LB.LB_Confige_for_Auto_test(targetid,100,0,255,offset),3)
             time.sleep(1)
             print("green value:",offset)
             offset += 10
+            offset = offset if offset < 255 else 255
         offset = 1
+
         while(offset < index):
-            self.update_msgid_count()
             self.Fn_LB_Light_Ctrl(self.My_LB.LB_Confige_for_Auto_test(targetid,100,offset,0,255),3)
             time.sleep(1)
             print("blue value:",offset)
             offset += 10
+            offset = offset if offset < 255 else 255
+        offset = 1 
         
-        self.update_msgid_count()
-        self.Fn_LB_Light_Ctrl(self.My_LB.LB_Confige_for_Auto_test(targetid,100,255,255,255),3)
+        
 
+        self.Fn_LB_Light_Ctrl(self.My_LB.LB_Confige_for_Auto_test(targetid,100,255,255,255),3)
 
     def Fn_Text_Clear_Send_Rec(self):
         self.textEdit_rec.setText("")
