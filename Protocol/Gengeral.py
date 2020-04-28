@@ -2,13 +2,12 @@ import paramiko
 import re
 import json
 import random
-dict_data = {'data' : {}}
 
 class Gengeral_Function:
 
     def __init__(self):
-        pass
-    
+        self.dict_data = {'data' : {}}
+        
     def Commom_msgType(self,imsgevent):
         if(imsgevent == 1):
             return 'identifyDevice'
@@ -27,7 +26,7 @@ class Gengeral_Function:
             'msgType':self.Commom_msgType(imsgevent), # return msg Type
             'targetDeviceId':targetDeviceId
             } 
-        dict_Payload = {'header': dict_header , 'payload' : dict_data }
+        dict_Payload = {'header': dict_header , 'payload' : self.dict_data }
         return json.dumps(dict_Payload)
 
     def addDevice(self,targetDeviceId,Nodeid,addr_mac,txinterval):
@@ -124,14 +123,12 @@ class Gengeral_Function:
     def rec_parser_sort_json(self,data):
         try:
             m = json.loads(data)
-            n = json.dumps(m,sort_keys=True,indent=2)
+            n = json.dumps(m,sort_keys=True,indent=3)
             return n 
         except Exception as Error:
             print("Error at Rec_parser:" + str(Error))
             return str(data)
             
-        
-
 
     
 

@@ -5,11 +5,13 @@ import IPy
 import socket
 import random
 import time
+# import 
 import Protocol.Boiler_json as Boiler_json
 import Protocol.Light_Bubl_json as Light_Bubl_json
 import Protocol.Smart_Plug_json as Smart_Plug_json
 import Protocol.Gengeral as Gengeral
 import Protocol.Dc_Ac_interval_json as interval_set
+import Protocol.tcp as tcp_socket
 from threading import Timer
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow
@@ -24,17 +26,16 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
     def __init__(self, parent=None):
         super(MyMainWindow, self).__init__(parent)
-        self.buffsize = 1024  # 接收資料的快取大小
+        self.buffsize = 1024 # 接收資料的快取大小
+        self.ip = "" # inite IP
         self.setupUi(self)
         self.CreateItems()
         self.CreateSignalSlot()
-        self.msgid = 1
-        self.tempmsgid = 0
-        self.ip = ""
         self.int_Max_number_node = 4097 # Node number hex 1001
         self.My_Gengral = Gengeral.Gengeral_Function()
         self.My_SP = Smart_Plug_json.SP_Json_Cmd()
         self.My_LB = Light_Bubl_json.LB_Json_Cmd()
+        self.My_tcp_clinet = tcp_socket.tcp_socket_clinet()
         self.MY_Interval = interval_set.Interval_set_Json_Cmd()
         self.bolDisable_encryption = False
         self.bolable_Rec = True
@@ -46,7 +47,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     def CreateSignalSlot(self):  # 設定線槽
         #== TCP Socket === 
         self.btn_connect.clicked.connect(self.Fn_Socket_Connect)        #Connect TCP Socket
-        self.btn_close.clicked.connect(self.Fn_socket_disconnect)       #Disconnet TCP Socket
+        self.btn_close.clicked.connect(self.Fn_Socket_Disconnect)       #Disconnet TCP Socket
         #== Gengeral function 
         self.btn_ac_find.clicked.connect(self.Fn_Find_dev)              # find dev
         self.btn_ota_available.clicked.connect(self.Fn_OTA_Available)   # OTA Available
@@ -67,16 +68,19 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.dial_red.valueChanged.connect(self.ChangeColorRed)       # Horizontal slider red
         self.dial_green.valueChanged.connect(self.ChangeColorGreen)   # Horizontal slider green
         self.dial_blue.valueChanged.connect(self.ChangeColorBlue)     # Horizontal slider blue 
-        self.dial_br.valueChanged.connect(self.ChangeBrightness)             # Horizontal slider Brightness 
-        self.dial_rgb_br.valueChanged.connect(self.ChangeRGBBrightness)             # Horizontal slider Brightness 
-        self.btn_lb_rgb_light_setting.clicked.connect(self.Fn_LB_RGB_Setting)# Setting RGB Color
-        self.btn_lb_rgb_brightness.clicked.connect(self.Fn_LB_RGB_Brightness)# Setting RGB Brightness 
-        self.btn_lb_white_brghtness.clicked.connect(self.Fn_White_Brightnes) # Setting White Brightness
-        self.btn_lb_light_off.clicked.connect(self.Fn_LB_General_OFF)        # Light OFF
-        self.btn_lb_light_on.clicked.connect(self.Fn_LB_General_ON)          # Light ON
+        self.dial_br.valueChanged.connect(self.ChangeBrightness)              # Horizontal slider Brightness 
+        self.dial_rgb_br.valueChanged.connect(self.ChangeRGBBrightness)       # Horizontal slider Brightness 
+        self.btn_lb_rgb_light_setting.clicked.connect(self.Fn_LB_RGB_Setting) # Setting RGB Color
+        self.btn_lb_rgb_brightness.clicked.connect(self.Fn_LB_RGB_Brightness) # Setting RGB Brightness 
+        self.btn_lb_white_brghtness.clicked.connect(self.Fn_White_Brightnes)  # Setting White Brightness
+        self.btn_lb_light_off.clicked.connect(self.Fn_LB_General_OFF)         # Light OFF
+        self.btn_lb_light_on.clicked.connect(self.Fn_LB_General_ON)           # Light ON
         # Light bulb Auto RGB Test
-        self.btn_auto_rgb_test.clicked.connect(self.Fn_LB_Auot_RGB_Test)
-        self.btn_auto_rgb_br_test.clicked.connect(self.Fn_LB_Auto_RGB_BR_Test)
+        self.btn_auto_rgb_test.clicked.connect(self.Fn_LB_Auot_RGB_Test)        # color test
+        self.btn_auto_rgb_br_test.clicked.connect(self.Fn_LB_Auto_RGB_BR_Test)  # brghtness test
+        self.btn_auto_LB_Switch.clicked.connect(self.Fn_LB_Auto_Switch_Test)    # Genral ON OFF
+        # SP and Boiler Auto Test 
+        self.btn_sp_boiler_auot_Switch.clicked.connect(self.Fn_Auto_Switch_Test) # Genral ON OFF
 
     def TCP_Conn_Enable_GB(self,bolresult): # UI Contrl 
         if(bolresult == True):
@@ -95,52 +99,41 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             self.btn_send_json.setEnabled(False)
             self.btn_connect.setEnabled(True)
             self.label_tcp_socket_state.setText("Disconnect")
-
-    def Fn_Socket_Connect(self):    #TCP Socket Function and ssh  connect 
-        if(self.is_ip(self.lineEdit.text())):
-            if(self.TCP_Clinet_Connect(self.ip) == True):
-                self.TCP_Clinet_Send(Disable_encryption)
-                self.bolDisable_encryption = True
-                self.Fn_mesh_dev_store()
-                self.TCP_Conn_Enable_GB(True)    
+        
+    def Fn_Socket_Connect(self):
+        self.ip = self.lineEdit.text()
+        if(self.My_tcp_clinet.init_socket_clinet() == True):
+            if(self.My_tcp_clinet.TCP_socket_Clinet_Connect(self.ip)):
+                self.Fn_mesh_dev_store()      # update devices list
+                self.TCP_Conn_Enable_GB(True)
             else:
-                print("Tcp socket Connect Fail")
+                self.label_tcp_socket_state.setText("Connect Socket Fail")
         else:
-            print("Tcp socket addr format Fail")
-       
-    def TCP_Clinet_Connect(self,addr_ip):
-        addr = (addr_ip,9090)
-        try:
-            clientsock.connect(addr)
-            return True
-        except socket.error as msg:
-            print('Failed to Socket connect , Error msg:' + str(msg.strerror))
-            return False
-
-    def Fn_send_json(self):
-        senddata = self.textEdit_Send.toPlainText() # 獲得輸入欄的內容
-        self.textEdit_Send.clear() # 清除輸入內容
-        if(len(senddata)>0):
-            self.TCP_Clinet_Send(senddata)
-
-    def Fn_socket_disconnect(self):
-        clientsock.close()
-        self.bolDisable_encryption = False
+            self.label_tcp_socket_state.setText("Init Socket Fail")
+    
+    def Fn_Socket_Disconnect(self):
+        self.My_tcp_clinet.TCP_socket_Clinet_Disconnect()
         self.TCP_Conn_Enable_GB(False)
     
+    def Fn_send_json(self):
+        strdata = self.textEdit_Send.toPlainText() # 獲得輸入欄的內容
+        self.textEdit_Send.clear() # 清除輸入內容
+        if(len(strdata)>0):
+            if(self.My_tcp_clinet.TCP_socket_Clinet_Send(strdata)):
+                bolresult = self.My_tcp_clinet.TCP_socket_Clinet_Rec()
+                if(bolresult != False):
+                    self.textEdit_rec.setText(self.My_Gengral.rec_parser_sort_json(bolresult))
+                        
     def Fn_mesh_dev_store(self):
-        SSh_Read_dev_Store = Gengeral.Gengeral_Function()
-        ListDate,self.int_Max_number_node = SSh_Read_dev_Store.Read_Dev_list(self.ip)
-        if(ListDate == False):
-            return
-        else:
+        ListDate,self.int_Max_number_node = self.My_Gengral.Read_Dev_list(self.ip)
+        if(ListDate != False):
             self.cb_Generated_id.clear()
             self.cb_Generated_id.addItems(ListDate)
 
     def Fn_Updata_Info(self):
-        self.label_type.setText(self.Get_Type())
-        self.label_mac.setText(self.Get_Mac())
-        self.label_targetid.setText(self.Get_Generated_ID())
+        self.label_type.setText(self.Get_Generated_ID(2))
+        self.label_mac.setText(self.Get_Generated_ID(3))
+        self.label_targetid.setText(self.Get_Generated_ID(1))
 
     # common function             
     def Fn_Find_dev(self):          # 1-> find dev 
@@ -160,10 +153,10 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
     def Fn_Common_function(self,ievent):
         if(ievent == 1 or ievent == 2 or ievent == 3 or ievent == 4 or ievent == 5):
-            strcmd = self.My_Gengral.Commom_Cmd(self.Get_Generated_ID(),ievent)
+            strcmd = self.My_Gengral.Commom_Cmd(self.Get_Generated_ID(1),ievent)
         if(ievent == 6):
             strcmd,self.int_Max_number_node = self.My_Gengral.addDevice(
-                self.Get_Generated_ID(),
+                self.Get_Generated_ID(1),
                 self.int_Max_number_node,
                 self.lineEdit_onboard_mac.text(),
                 self.lineEdit_Report_interval.text()
@@ -173,8 +166,8 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             if(self.cb_Action.isChecked == False):
                 bolaction = False
             strcmd = self.MY_Interval.Set_Interval_contorl(
-                self.Get_Type(),
-                self.Get_Generated_ID(),
+                self.Get_Generated_ID(2),
+                self.Get_Generated_ID(1),
                 self.spinBox_tx.value(),
                 self.spinBox_rx.value(),
                 bolaction
@@ -182,19 +175,27 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.TCP_Clinet_Send(strcmd)
 
     def Fn_General_ON(self):
-        self.Fn_General_Ctrl(True,self.Get_Generated_ID())
+        self.Fn_General_Ctrl(True,self.Get_Generated_ID(1))
     def Fn_General_OFF(self):
-        self.Fn_General_Ctrl(False,self.Get_Generated_ID())
+        self.Fn_General_Ctrl(False,self.Get_Generated_ID(1))
     def Fn_General_Ctrl(self,Switch,strid):           
         self.TCP_Clinet_Send(self.My_SP.sendControlCommand(strid,Switch))    
 
+    def Fn_Auto_Switch_Test(self):
+        offset = 0 
+        index = self.spinBox_sp_boiler_value.value()
+        while(offset < index ):
+            self.Fn_General_Ctrl(True,self.Get_Generated_ID(1))
+            time.sleep(3)
+            self.Fn_General_Ctrl(False,self.Get_Generated_ID(1))
+            offset += 1
+            
     # SP OPC Control 
     def Fn_OPC_status_Contorl(self):
         if(self.cb_sp_enable.isChecked()):
-        #if(self.rb_sp_enable.isChecked() == True):
-            self.TCP_Clinet_Send(self.My_SP.Power_Threshold(self.Get_Generated_ID(),True,self.spinBox_sp_power.value()))
+            self.TCP_Clinet_Send(self.My_SP.Power_Threshold(self.Get_Generated_ID(1),True,self.spinBox_sp_power.value()))
         else:
-            self.TCP_Clinet_Send(self.My_SP.Power_Threshold(self.Get_Generated_ID(),False,0))
+            self.TCP_Clinet_Send(self.My_SP.Power_Threshold(self.Get_Generated_ID(1),False,0))
         
     # Light Blub Horizontal slider control RGB and Brightness value*                                                   
     def ChangeColorRed(self):                       
@@ -205,6 +206,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.label_blue_val.setText(str(self.dial_blue.value()))
     def ChangeBrightness(self):
         self.lb_pb_brightness.setValue(self.dial_br.value())
+        self.label_white_br.setText(str(self.dial_br.value()))
     def ChangeRGBBrightness(self):
         self.lb_pb_rgbbrightness.setValue(self.dial_rgb_br.value())
 
@@ -223,101 +225,83 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                 strcmd = self.My_LB.sendControl_Color_White_Command(confige)
         self.TCP_Clinet_Send(strcmd)
         print(strcmd)
-
-    def LB_Confige(self,bolswitch,itype,bolBrightness):
-        if(itype == 0):
-            brvalue = self.lb_pb_brightness.value()
-        else:
-            brvalue = self.lb_pb_rgbbrightness.value()
-        LB_contor_confige = [
-                            bolswitch,
-                            itype,
-                            self.Get_Generated_ID(),
-                            random.randint(0,999),
-                            brvalue,
-                            bolBrightness,
-                            self.dial_red.value(),
-                            self.dial_green.value(),
-                            self.dial_blue.value()
-        ]
-        return LB_contor_confige
+   
     # Create LB Cmd 
     def Fn_LB_General_OFF(self):
-        self.Fn_LB_Light_Ctrl(self.LB_Confige(False,0,False),1)
+        self.Fn_LB_Light_Ctrl(self.My_LB.LB_Confige(False,0,self.lb_pb_brightness.value(),self.Get_Generated_ID(1),self.dial_red.value(),self.dial_green.value(),self.dial_blue.value()),1)
     def Fn_LB_General_ON(self):
-        self.Fn_LB_Light_Ctrl(self.LB_Confige(True,0,False),1)
+        self.Fn_LB_Light_Ctrl(self.My_LB.LB_Confige(True,0,self.lb_pb_brightness.value(),self.Get_Generated_ID(1),self.dial_red.value(),self.dial_green.value(),self.dial_blue.value()),1)
     def Fn_LB_RGB_Brightness(self):
-        self.Fn_LB_Light_Ctrl(self.LB_Confige(False,1,True),2)
+        self.Fn_LB_Light_Ctrl(self.My_LB.LB_Confige(False,1,self.lb_pb_rgbbrightness.value(),self.Get_Generated_ID(1),self.dial_red.value(),self.dial_green.value(),self.dial_blue.value()),2)
     def Fn_LB_RGB_Setting(self):
-        self.Fn_LB_Light_Ctrl(self.LB_Confige(False,1,False),3)
+        self.Fn_LB_Light_Ctrl(self.My_LB.LB_Confige(False,1,self.lb_pb_rgbbrightness.value(),self.Get_Generated_ID(1),self.dial_red.value(),self.dial_green.value(),self.dial_blue.value()),3)
     def Fn_White_Brightnes(self):
-        self.Fn_LB_Light_Ctrl(self.LB_Confige(False,0,True),4)
+        self.Fn_LB_Light_Ctrl(self.My_LB.LB_Confige(False,0,self.lb_pb_brightness.value(),self.Get_Generated_ID(1),self.dial_red.value(),self.dial_green.value(),self.dial_blue.value()),4)
+
+    def Fn_LB_Auto_Switch_Test(self):
+        offset = 0  
+        index = int(self.spinBox_LB_Count.value())
+        targetid = self.Get_Generated_ID(1)
+        while(offset < index):
+            print("Test Count:" + str(offset))
+            self.Fn_LB_Light_Ctrl(self.My_LB.LB_Confige(False,0,100,targetid,255,255,255),1)
+            time.sleep(3)
+            self.Fn_LB_Light_Ctrl(self.My_LB.LB_Confige(True,0,100,targetid,255,255,255),1)
+            time.sleep(3)
+            offset +=1
+        self.Fn_LB_Light_Ctrl(self.My_LB.LB_Confige_for_Auto_test(targetid,100,255,255,255),3)
+
 
     def Fn_LB_Auto_RGB_BR_Test(self):
         offset = 1
         index = 100
-        targetid = self.Get_Generated_ID()
+        targetid = self.Get_Generated_ID(1)
         self.bolable_Rec = False
 
         while(offset < index):
             self.Fn_LB_Light_Ctrl(self.My_LB.LB_Confige_for_Auto_test(targetid,offset,255,255,100),3)
             time.sleep(1)
-            print("Br value : " + str(offset))
             offset += 10
             offset = offset if offset < 100 else 100
-            print("Next Br value : " + str(offset))
         offset = 1 
 
         while(offset < index):
             self.Fn_LB_Light_Ctrl(self.My_LB.LB_Confige_for_Auto_test(targetid,offset,255,100,255),3)
             time.sleep(1)
-            print("Br value : " + str(offset))
             offset += 10
             offset = offset if offset < 100 else 100
-            print("Next Br value : " + str(offset))
         offset = 1 
     
         while(offset < index):
             self.Fn_LB_Light_Ctrl(self.My_LB.LB_Confige_for_Auto_test(targetid,offset,100,255,255),3)
             time.sleep(1)
-            print("Br value : " + str(offset))
             offset += 10
             offset = offset if offset < 100 else 100
-            print("Next Br value : " + str(offset))
         offset = 1 
 
     def Fn_LB_Auot_RGB_Test(self):
         offset = 1
         index = 255
-        targetid = self.Get_Generated_ID()
+        targetid = self.Get_Generated_ID(1)
         self.bolable_Rec = False
-        
         while(offset < index):
             self.Fn_LB_Light_Ctrl(self.My_LB.LB_Confige_for_Auto_test(targetid,100,255,offset,0),3)
             time.sleep(1)
-            print("Red value:",offset)
             offset += 10
             offset = offset if offset < 255 else 255
         offset = 1
-
         while(offset < index):
             self.Fn_LB_Light_Ctrl(self.My_LB.LB_Confige_for_Auto_test(targetid,100,0,255,offset),3)
             time.sleep(1)
-            print("green value:",offset)
             offset += 10
             offset = offset if offset < 255 else 255
         offset = 1
-
         while(offset < index):
             self.Fn_LB_Light_Ctrl(self.My_LB.LB_Confige_for_Auto_test(targetid,100,offset,0,255),3)
             time.sleep(1)
-            print("blue value:",offset)
             offset += 10
             offset = offset if offset < 255 else 255
         offset = 1 
-        
-        
-
         self.Fn_LB_Light_Ctrl(self.My_LB.LB_Confige_for_Auto_test(targetid,100,255,255,255),3)
 
     def Fn_Text_Clear_Send_Rec(self):
@@ -334,48 +318,34 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
     def TCP_Clinet_Send(self,data):
         try:
-            clientsock.send(data.encode())  # 傳送訊息
-            if(self.bolDisable_encryption == True):
-                self.Update_Text_Send_Rec_Text(time.strftime("%Y-%m-%d %H:%M:%S:\r\n", time.localtime()) + self.My_Gengral.rec_parser_sort_json(data) +'\n\r')
-                #if(self.bolable_Rec):
-                recvdata = clientsock.recv(self.buffsize).decode('utf-8')  # 接收訊息，格式轉換
-                self.textEdit_rec.insertPlainText( time.strftime("%Y-%m-%d %H:%M:%S :\r\n", time.localtime()) + self.My_Gengral.rec_parser_sort_json(recvdata) + '\n\r')
+            self.My_tcp_clinet.TCP_socket_Clinet_Send(data)
+            self.Update_Text_Send_Rec_Text(time.strftime("%Y-%m-%d %H:%M:%S:\r\n", time.localtime()) + self.My_Gengral.rec_parser_sort_json(data) +'\n\r')
+            recvdata = self.My_tcp_clinet.TCP_socket_Clinet_Rec()
+            self.textEdit_rec.insertPlainText( time.strftime("%Y-%m-%d %H:%M:%S :\r\n", time.localtime()) + self.My_Gengral.rec_parser_sort_json(recvdata) + '\n\r')
         except socket.error as msg:
-            print('Socket Error : %s ' %str(msg))
             Timesheet = time.strftime("%Y-%m-%d %H:%M:%S ", time.localtime())
             self.textEdit_rec.insertPlainText(Timesheet + " Error Result: " + str(msg) + '\n\r')
 
-    def is_ip(self,ipAddr):
+    def Get_Generated_ID(self,itype):
+        '''
+        itype option target id = 1,dev type = 2, mac = 3
+        '''
+        if(itype == 1): # Target id
+            pattern = r"(?<=GenID\:)\w{22}"
+        if(itype == 2): # dev type
+            pattern = r"(?<=Type\:)\w+"
+        if(itype == 3): # mac 
+            pattern = r"(?<=Mac\:)\w{12}"
         try:
-            IPy.IP(ipAddr)
-            self.ip =  ipAddr
-            return True
-        except Exception as e:
-            print("Error msg:" + str(e) )
-
-    def Get_Generated_ID(self):
-        if(len(self.lineEdit_Generated.text()) == 22 ):
-            strid = self.lineEdit_Generated.text()
-        else:
-            temp_id = re.findall(r"(?<=GenID\:)\w{22}",self.cb_Generated_id.currentText())     
-            strid = temp_id[0]
-        return strid   
-
-    def Get_Type(self):
-        if(len(self.lineEdit_Generated.text()) == 22 ):
-            strType = self.lineEdit_Generated.text()
-        else:
-            Type = re.findall(r"(?<=Type\:)\w+",self.cb_Generated_id.currentText())     
-            strType = Type[0]
-        return strType   
-        
-    def Get_Mac(self):
-        if(len(self.lineEdit_Generated.text()) == 22 ):
-            strType = self.lineEdit_Generated.text()
-        else:
-            Type = re.findall(r"(?<=Mac\:)\w{12}",self.cb_Generated_id.currentText())     
-            strType = Type[0]
-        return strType   
+            if(len(self.lineEdit_Generated.text()) == 22 ):
+                strid = self.lineEdit_Generated.text()
+            else:
+                temp_id = re.findall(pattern,self.cb_Generated_id.currentText())     
+                strid = temp_id[0]
+            return strid
+        except Exception as msg:
+            print(str(msg)) 
+            return 
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

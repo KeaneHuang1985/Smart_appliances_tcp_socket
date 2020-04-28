@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>585</width>
-    <height>581</height>
+    <width>673</width>
+    <height>831</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,24 +17,10 @@
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="4" column="0">
-       <widget class="QPushButton" name="btn_connect">
-        <property name="text">
-         <string>Connect</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0">
-       <widget class="QPushButton" name="btn_close">
-        <property name="text">
-         <string>Disconnect</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="0">
        <widget class="QLabel" name="label_Time">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -47,10 +33,43 @@
         </property>
        </widget>
       </item>
+      <item row="4" column="0">
+       <widget class="QPushButton" name="btn_connect">
+        <property name="text">
+         <string>Connect</string>
+        </property>
+       </widget>
+      </item>
       <item row="3" column="0">
        <widget class="QLineEdit" name="lineEdit">
         <property name="inputMask">
          <string>000.000.000.000</string>
+        </property>
+        <property name="text">
+         <string>192.168.137.0</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QPushButton" name="btn_close">
+        <property name="text">
+         <string>Disconnect</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_tcp_socket_state">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Disconnect</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -59,18 +78,14 @@
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
          <string>TCP Socket State</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_tcp_socket_state">
-        <property name="text">
-         <string>Disconnect</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -87,9 +102,18 @@
       <property name="title">
        <string>Commom</string>
       </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <widget class="QGroupBox" name="groupBox">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="title">
           <string>Select Devices Info</string>
          </property>
@@ -148,6 +172,63 @@
         </widget>
        </item>
        <item>
+        <widget class="QGroupBox" name="groupBox_5">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="title">
+          <string>Light Bulb Auto Test</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_8">
+          <item>
+           <widget class="QLabel" name="label_12">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Auto Test Count</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="spinBox_LB_Count">
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>9999</number>
+            </property>
+            <property name="value">
+             <number>1</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_auto_LB_Switch">
+            <property name="text">
+             <string>Auto Switch Test</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="btn_ac_find">
          <property name="text">
           <string>Find AC Device</string>
@@ -179,6 +260,12 @@
         <widget class="QGroupBox" name="GB_Setting">
          <property name="enabled">
           <bool>false</bool>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
          </property>
          <property name="title">
           <string>Add Devces</string>
@@ -269,6 +356,12 @@
       <property name="enabled">
        <bool>false</bool>
       </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="title">
        <string>SP / Boiler</string>
       </property>
@@ -288,13 +381,70 @@
         </widget>
        </item>
        <item>
+        <widget class="QLabel" name="label_13">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Auto Test Count</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::PlainText</enum>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSpinBox" name="spinBox_sp_boiler_value">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btn_sp_boiler_auot_Switch">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Auto_Switch_Test</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QGroupBox" name="groupBox_2">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="title">
           <string>SP OPC Control</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_4">
           <item>
            <widget class="QLabel" name="label_11">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text">
              <string>POWER THRESHOLD</string>
             </property>
@@ -338,18 +488,36 @@
        </item>
        <item>
         <widget class="QGroupBox" name="groupBox_3">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="title">
           <string>Report Interval</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
            <widget class="QGroupBox" name="groupBox_4">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="title">
              <string>Guard</string>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_6">
              <item>
               <widget class="QCheckBox" name="cb_Action">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="text">
                 <string>Action</string>
                </property>
@@ -360,6 +528,12 @@
           </item>
           <item>
            <widget class="QLabel" name="label_7">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text">
              <string>Tx interval</string>
             </property>
@@ -380,6 +554,12 @@
           </item>
           <item>
            <widget class="QLabel" name="label_8">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text">
              <string>Wakeup interval</string>
             </property>
@@ -416,71 +596,66 @@
       <property name="enabled">
        <bool>false</bool>
       </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="title">
        <string>LB</string>
       </property>
       <layout class="QGridLayout" name="gridLayout_5">
-       <item row="13" column="1">
-        <widget class="QLabel" name="label_blue_val">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_10">
          <property name="text">
-          <string>0</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;White Brightness&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="23" column="0">
-        <widget class="QDial" name="dial_rgb_br">
-         <property name="maximum">
-          <number>100</number>
-         </property>
-         <property name="value">
-          <number>50</number>
          </property>
         </widget>
        </item>
        <item row="8" column="0">
-        <widget class="QPushButton" name="btn_lb_white_brghtness">
-         <property name="text">
-          <string>White Brghtness</string>
+        <widget class="QDial" name="dial_br">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
          </property>
-        </widget>
-       </item>
-       <item row="22" column="0">
-        <widget class="QProgressBar" name="lb_pb_rgbbrightness">
-         <property name="value">
-          <number>50</number>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="10" column="0">
-        <widget class="QDial" name="dial_red">
          <property name="minimum">
           <number>0</number>
          </property>
          <property name="maximum">
           <number>255</number>
          </property>
+         <property name="value">
+          <number>50</number>
+         </property>
         </widget>
        </item>
-       <item row="13" column="0">
-        <widget class="QLabel" name="label_blue">
+       <item row="9" column="0">
+        <widget class="QPushButton" name="btn_lb_white_brghtness">
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#5500ff;&quot;&gt;Blue&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>White Brghtness</string>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="0">
+        <widget class="QLabel" name="label_red">
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#ff0000;&quot;&gt;Red&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
          </property>
         </widget>
        </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_10">
+       <item row="0" column="1">
+        <widget class="QLabel" name="label_white_br">
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;White Brightness&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>50</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
@@ -509,47 +684,7 @@
          </property>
         </widget>
        </item>
-       <item row="11" column="1">
-        <widget class="QLabel" name="label_green_val">
-         <property name="text">
-          <string>0</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="11" column="0">
-        <widget class="QLabel" name="label_green">
-         <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600; color:#00aa00;&quot;&gt;Green&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="0">
-        <widget class="QDial" name="dial_br">
-         <property name="minimum">
-          <number>0</number>
-         </property>
-         <property name="maximum">
-          <number>255</number>
-         </property>
-         <property name="value">
-          <number>50</number>
-         </property>
-        </widget>
-       </item>
-       <item row="21" column="0">
-        <widget class="QLabel" name="label_9">
-         <property name="text">
-          <string>RGB Brightness</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="1">
+       <item row="10" column="1">
         <widget class="QLabel" name="label_red_val">
          <property name="text">
           <string>0</string>
@@ -559,38 +694,78 @@
          </property>
         </widget>
        </item>
-       <item row="9" column="0">
-        <widget class="QLabel" name="label_red">
-         <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#ff0000;&quot;&gt;Red&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <item row="11" column="0">
+        <widget class="QDial" name="dial_red">
+         <property name="minimum">
+          <number>0</number>
          </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="19" column="0">
-        <widget class="QPushButton" name="btn_lb_rgb_light_setting">
-         <property name="text">
-          <string>RGB Setting </string>
-         </property>
-        </widget>
-       </item>
-       <item row="14" column="0">
-        <widget class="QDial" name="dial_blue">
          <property name="maximum">
           <number>255</number>
          </property>
         </widget>
        </item>
        <item row="12" column="0">
-        <widget class="QDial" name="dial_green">
-         <property name="maximum">
-          <number>255</number>
+        <widget class="QLabel" name="label_green">
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600; color:#00aa00;&quot;&gt;Green&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item row="33" column="0">
+        <widget class="QPushButton" name="btn_auto_rgb_br_test">
+         <property name="text">
+          <string>Auto RGB Brightness Test</string>
+         </property>
+        </widget>
+       </item>
+       <item row="14" column="0">
+        <widget class="QLabel" name="label_blue">
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#5500ff;&quot;&gt;Blue&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="22" column="0">
+        <widget class="QLabel" name="label_9">
+         <property name="text">
+          <string>RGB Brightness</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
          </property>
         </widget>
        </item>
        <item row="24" column="0">
+        <widget class="QDial" name="dial_rgb_br">
+         <property name="maximum">
+          <number>100</number>
+         </property>
+         <property name="value">
+          <number>50</number>
+         </property>
+        </widget>
+       </item>
+       <item row="14" column="1">
+        <widget class="QLabel" name="label_blue_val">
+         <property name="text">
+          <string>0</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="20" column="0">
+        <widget class="QPushButton" name="btn_lb_rgb_light_setting">
+         <property name="text">
+          <string>RGB Setting </string>
+         </property>
+        </widget>
+       </item>
+       <item row="25" column="0">
         <widget class="QPushButton" name="btn_lb_rgb_brightness">
          <property name="text">
           <string>RGB Brightness </string>
@@ -598,30 +773,57 @@
         </widget>
        </item>
        <item row="30" column="0">
-        <widget class="QPushButton" name="btn_lb_light_off">
-         <property name="text">
-          <string>Light OFF</string>
-         </property>
-        </widget>
-       </item>
-       <item row="29" column="0">
         <widget class="QPushButton" name="btn_lb_light_on">
          <property name="text">
           <string>Light ON</string>
          </property>
         </widget>
        </item>
-       <item row="32" column="0">
-        <widget class="QPushButton" name="btn_auto_rgb_br_test">
+       <item row="12" column="1">
+        <widget class="QLabel" name="label_green_val">
          <property name="text">
-          <string>Auto RGB Brightness Test</string>
+          <string>0</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="13" column="0">
+        <widget class="QDial" name="dial_green">
+         <property name="maximum">
+          <number>255</number>
+         </property>
+        </widget>
+       </item>
+       <item row="15" column="0">
+        <widget class="QDial" name="dial_blue">
+         <property name="maximum">
+          <number>255</number>
+         </property>
+        </widget>
+       </item>
+       <item row="23" column="0">
+        <widget class="QProgressBar" name="lb_pb_rgbbrightness">
+         <property name="value">
+          <number>50</number>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="32" column="0">
+        <widget class="QPushButton" name="btn_auto_rgb_test">
+         <property name="text">
+          <string>Auto RGB light Test</string>
          </property>
         </widget>
        </item>
        <item row="31" column="0">
-        <widget class="QPushButton" name="btn_auto_rgb_test">
+        <widget class="QPushButton" name="btn_lb_light_off">
          <property name="text">
-          <string>Auto RGB light Test</string>
+          <string>Light OFF</string>
          </property>
         </widget>
        </item>
@@ -629,7 +831,6 @@
       <zorder>label_10</zorder>
       <zorder>btn_lb_light_on</zorder>
       <zorder>btn_lb_rgb_light_setting</zorder>
-      <zorder>btn_lb_light_off</zorder>
       <zorder>label_red</zorder>
       <zorder>label_green</zorder>
       <zorder>label_blue</zorder>
@@ -646,8 +847,10 @@
       <zorder>lb_pb_rgbbrightness</zorder>
       <zorder>label_9</zorder>
       <zorder>btn_lb_rgb_brightness</zorder>
-      <zorder>btn_auto_rgb_br_test</zorder>
+      <zorder>label_white_br</zorder>
       <zorder>btn_auto_rgb_test</zorder>
+      <zorder>btn_auto_rgb_br_test</zorder>
+      <zorder>btn_lb_light_off</zorder>
      </widget>
     </item>
     <item>
@@ -655,6 +858,33 @@
     </item>
     <item>
      <layout class="QGridLayout" name="gridLayout_2">
+      <item row="3" column="0">
+       <widget class="QTextEdit" name="textEdit_send"/>
+      </item>
+      <item row="4" column="0">
+       <widget class="QPushButton" name="btn_send_json">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Send Msg</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QTextEdit" name="textEdit_rec">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QPushButton" name="btn_clear">
+        <property name="text">
+         <string>Clear Msg</string>
+        </property>
+       </widget>
+      </item>
       <item row="2" column="1">
        <widget class="QLabel" name="label_4">
         <property name="text">
@@ -666,33 +896,6 @@
        <widget class="QLabel" name="label_3">
         <property name="text">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Send Json Format :&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QTextEdit" name="textEdit_rec">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QTextEdit" name="textEdit_send"/>
-      </item>
-      <item row="4" column="1">
-       <widget class="QPushButton" name="btn_clear">
-        <property name="text">
-         <string>Clear Msg</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QPushButton" name="btn_send_json">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>Send Msg</string>
         </property>
        </widget>
       </item>
